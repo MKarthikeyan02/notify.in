@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
-<title>FURY | Professional Suite</title>
+<title>FURY | Flash Message</title>
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -140,9 +140,9 @@
 <textarea id="tpl-ob-header">Opening Bell 🔔
 
 </textarea>
-<textarea id="tpl-ob-line">· {CONTENT}</textarea>
+<textarea id="tpl-ob-line">🔷 {CONTENT}</textarea>
 <!-- Simplified Header Templates (Strings to be copied) -->
-<textarea id="tpl-market">📢 MARKET UPDATE 📰</textarea>
+<textarea id="tpl-market">📢 MARKET UPDATES 📰</textarea>
 <textarea id="tpl-global">🌎 GLOBAL CUES 📰</textarea>
 <textarea id="tpl-data">📢 DATA ALERT</textarea>
 <textarea id="data-bell-config">{ "arrows": { "up": "⬆️ ", "down": "⬇️ " }, "replacements": { "NEAR": "AT" } }</textarea>
@@ -240,7 +240,7 @@
 <i class="fas fa-comment-alt text-base"></i> <span data-original="Message">MESSAGE</span>
 </button>
 <button class="flex-shrink-0 px-8 py-3 rounded-xl text-sm font-bold tracking-wider flex items-center gap-3 uppercase whitespace-nowrap bg-slate-50 dark:bg-slate-700 text-slate-500 hover:text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-600 btn-flat nav-btn dark:text-slate-400" id="nav-todo" onclick="window.app.setTab('todo')">
-<i class="fas fa-check-square text-base"></i> <span data-original="To-Do List">TO-DO LIST</span>
+<i class="fas fa-check-square text-base"></i> <span data-original="To-Do List">TASK MANAGER</span>
 </button>
 </div>
 </nav>
@@ -280,7 +280,7 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 flex-shrink-0">
 <div class="card-flat card-orange rounded-2xl p-8 cursor-pointer flex flex-col items-center justify-center text-center shadow-md hover:shadow-xl group bg-white dark:bg-slate-800" onclick="window.app.setTab('todo')">
 <i class="fas fa-list-check text-4xl mb-4 text-orange-600 dark:text-orange-400 group-hover:scale-110 transition-transform"></i>
-<h3 class="font-bold text-sm uppercase tracking-widest text-orange-700 dark:text-orange-300">To-Do List</h3>
+<h3 class="font-bold text-sm uppercase tracking-widest text-orange-700 dark:text-orange-300">TASK MANAGER</h3>
 </div>
 <div class="card-flat card-slate rounded-2xl p-8 cursor-pointer flex flex-col items-center justify-center text-center shadow-md hover:shadow-xl group bg-white dark:bg-slate-800" onclick="window.app.openDownload()">
 <i class="fas fa-download text-4xl mb-4 text-slate-500 dark:text-slate-400 group-hover:scale-110 transition-transform"></i>
@@ -325,16 +325,16 @@
 <!-- Market Updates -->
 <div class="card-flat card-brand rounded-xl p-4 relative group flex flex-col justify-between h-32 hover:border-brand-500 transition-colors bg-white dark:bg-slate-800">
 <button class="absolute top-2 right-2 text-slate-400 hover:text-brand-500 transition-colors" onclick="window.app.openSectionEditor('market')" title="Edit Template"><i class="fas fa-edit text-xs"></i></button>
-<div class="text-[9px] font-black uppercase tracking-widest opacity-50 text-center mb-1 text-slate-500">Section</div>
+<div class="text-[9px] font-black uppercase tracking-widest opacity-50 text-center mb-1 text-slate-500">Header</div>
 <div class="flex-1 flex items-center justify-center">
-<div class="text-sm font-bold text-center px-2 leading-tight text-brand-700 dark:text-brand-200" id="preview-market">📢 MARKET UPDATE 📰</div>
+<div class="text-sm font-bold text-center px-2 leading-tight text-brand-700 dark:text-brand-200" id="preview-market">📢 MARKET UPDATES 📰</div>
 </div>
 <button class="w-full btn-flat py-2 bg-brand-600 text-white rounded-lg font-bold text-[10px] uppercase border-brand-600 flex items-center justify-center gap-2" onclick="window.app.copyHeader('market')"><i class="fas fa-copy"></i> Copy Header</button>
 </div>
 <!-- Global Cues -->
 <div class="card-flat card-emerald rounded-xl p-4 relative group flex flex-col justify-between h-32 hover:border-emerald-500 transition-colors bg-white dark:bg-slate-800">
 <button class="absolute top-2 right-2 text-slate-400 hover:text-emerald-500 transition-colors" onclick="window.app.openSectionEditor('global')" title="Edit Template"><i class="fas fa-edit text-xs"></i></button>
-<div class="text-[9px] font-black uppercase tracking-widest opacity-50 text-center mb-1 text-slate-500">Section</div>
+<div class="text-[9px] font-black uppercase tracking-widest opacity-50 text-center mb-1 text-slate-500">Header</div>
 <div class="flex-1 flex items-center justify-center">
 <div class="text-sm font-bold text-center px-2 leading-tight text-emerald-700 dark:text-emerald-200" id="preview-global">🌎 GLOBAL CUES 📰</div>
 </div>
@@ -343,7 +343,7 @@
 <!-- Data Alert -->
 <div class="card-flat card-rose rounded-xl p-4 relative group flex flex-col justify-between h-32 hover:border-rose-500 transition-colors bg-white dark:bg-slate-800">
 <button class="absolute top-2 right-2 text-slate-400 hover:text-rose-500 transition-colors" onclick="window.app.openSectionEditor('data')" title="Edit Template"><i class="fas fa-edit text-xs"></i></button>
-<div class="text-[9px] font-black uppercase tracking-widest opacity-50 text-center mb-1 text-slate-500">Section</div>
+<div class="text-[9px] font-black uppercase tracking-widest opacity-50 text-center mb-1 text-slate-500">Header</div>
 <div class="flex-1 flex items-center justify-center">
 <div class="text-sm font-bold text-center px-2 leading-tight text-rose-700 dark:text-rose-200" id="preview-data">📢 DATA ALERT</div>
 </div>
@@ -382,7 +382,7 @@
 <div class="grid grid-cols-2 gap-4 relative z-10">
 <div class="col-span-2"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">3. Message Date</label><input class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs font-mono focus:border-brand-500 outline-none" id="date-msg" type="date" value=""></div>
 <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">4. Expiry Date</label><input class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs font-mono focus:border-brand-500 outline-none" id="date-expiry" type="date" value=""></div>
-<div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">5. Tender Start</label><input class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs font-mono focus:border-brand-500 outline-none" id="date-tender" type="date" value=""></div>
+<div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">5. Tender Start Date</label><input class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs font-mono focus:border-brand-500 outline-none" id="date-tender" type="date" value=""></div>
 </div>
 <button class="w-full btn-flat py-3.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold text-xs tracking-wide shadow-md border-brand-600" onclick="window.app.genFno()"><i class="fas fa-bolt"></i> Generate Alert</button>
 </div>
@@ -415,7 +415,7 @@
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Contract Symbol</label><input class="w-full input-visual p-3 text-xs uppercase" id="exp-sym" placeholder="E.g. GOLDM" value=""></div>
 <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Expiry Date</label><input class="w-full input-visual p-3 text-xs font-mono" id="exp-date" type="date" value=""></div>
-<div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Tender Date</label><div class="flex gap-2"><input class="flex-1 input-visual p-3 text-xs font-mono" id="exp-tender" type="date" value=""><button class="btn-flat px-6 bg-brand-600 text-white rounded-xl text-xs font-bold shadow-sm border-brand-600" onclick="window.app.addExpiry()">ADD</button></div></div>
+<div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Tender Start Date</label><div class="flex gap-2"><input class="flex-1 input-visual p-3 text-xs font-mono" id="exp-tender" type="date" value=""><button class="btn-flat px-6 bg-brand-600 text-white rounded-xl text-xs font-bold shadow-sm border-brand-600" onclick="window.app.addExpiry()">ADD</button></div></div>
 </div>
 </div>
 </div>
@@ -474,10 +474,10 @@
 </div>
 <div class="flex flex-col gap-3">
 <button class="w-full btn-flat py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-bold shadow-lg border-brand-600 flex items-center justify-center gap-2" onclick="window.app.dlHtml()">
-<i class="fas fa-file-code"></i> Download Source (HTML)
+<i class="fas fa-file-code"></i> Download Source File (HTML)
                 </button>
 <button class="w-full btn-flat py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold border border-slate-300 dark:border-slate-900 flex items-center justify-center gap-2" onclick="window.app.dlExe()">
-<i class="fab fa-windows"></i> Download Desktop App (EXE)
+<i class="fab fa-windows"></i> Download Desktop App (HTA)
                 </button>
 </div>
 </div>

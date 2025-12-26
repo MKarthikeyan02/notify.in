@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<meta content="FURY Professional Suite" name="apple-mobile-web-app-title">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="default" name="apple-mobile-web-app-status-bar-style">
+<title>FURY | Flash Message</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        darkMode: 'class',
+        theme: {
+            extend: {
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                    mono: ['JetBrains Mono', 'monospace'],
+                },
+                colors: {
+                    brand: { 
+                        50: '#eef2ff',
+                        100: '#e0e7ff',
+                        400: '#818cf8',
+                        500: '#6366f1', 
+                        600: '#4f46e5',
+                        700: '#4338ca',
+                        800: '#3730a3',
+                    },
+                    dark: { 
+                        800: '#1e293b', 
+                        900: '#0f172a' 
+                    }
+                },
+                animation: {
+                    'fade-in': 'fadeIn 0.2s ease-out',
+                    'pop-in': 'popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                },
+                keyframes: {
+                    fadeIn: {
+                        '0%': { opacity: '0' },
+                        '100%': { opacity: '1' },
+                    },
+                    popIn: {
+                        '0%': { transform: 'scale(0.95)', opacity: '0' },
+                        '100%': { transform: 'scale(1)', opacity: '1' },
+                    }
+                }
+            }
+        }
+    }
+</script>
+<!-- Icons & Fonts -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<!-- Custom Styles -->
+<style>
+    /* Strict No-Scroll Layout */
+    html, body { height: 100%; width: 100%; overflow: hidden; margin: 0; padding: 0; }
+    
+    /* Glassmorphism - Flat/Clean */
+    .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border: 1px solid rgba(226, 232, 240, 0.8); }
+    .dark .glass { background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(255, 255, 255, 0.08); }
+    
+    /* Custom Scrollbar */
+    .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
+    .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .dark .custom-scroll::-webkit-scrollbar-thumb { background: #475569; }
+    
+    /* Inputs */
+    .input-visual { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-family: 'JetBrains Mono', monospace; resize: none; transition: all 0.2s; color: #334155; }
+    .dark .input-visual { background-color: #0f172a; border-color: #334155; color: #e2e8f0; }
+    .input-visual:focus { border-color: #6366f1; outline: none; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+    .dark input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+    
+    .task-checkbox:checked { background-color: #6366f1; border-color: #6366f1; }
+    .task-checkbox:checked + div { text-decoration: line-through; color: #94a3b8; }
+
+    /* Flat Button Effect */
+    .btn-flat {
+        position: relative;
+        transition: all 0.2s;
+        border-width: 1px;
+        transform: translateY(0);
+    }
+    .btn-flat:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    .btn-flat:active {
+        transform: translateY(0);
+        opacity: 0.95;
+    }
+
+    /* Side Nav Item */
+    .nav-item {
+        transition: all 0.2s ease;
+        border-radius: 0.75rem;
+    }
+    
+    .nav-item.active {
+        background-color: #eef2ff;
+        border: 1px solid #e0e7ff;
+    }
+    .dark .nav-item.active {
+        background-color: rgba(79, 70, 229, 0.15);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+    
+    /* Flat Card Dashboard */
+    .card-flat {
+        transition: all 0.2s ease;
+        border-width: 1px;
+    }
+    .card-flat:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Card Colors */
+    .card-brand { background-color: white; border-color: #e0e7ff; }
+    .dark .card-brand { background-color: #1e293b; border-color: #312e81; }
+    
+    .card-yellow { background-color: white; border-color: #fef08a; }
+    .dark .card-yellow { background-color: #1e293b; border-color: #854d0e; }
+
+    .card-emerald { background-color: white; border-color: #d1fae5; }
+    .dark .card-emerald { background-color: #1e293b; border-color: #064e3b; }
+
+    .card-rose { background-color: white; border-color: #ffe4e6; }
+    .dark .card-rose { background-color: #1e293b; border-color: #881337; }
+
+    .card-blue { background-color: white; border-color: #dbeafe; }
+    .dark .card-blue { background-color: #1e293b; border-color: #1e3a8a; }
+
+    .card-orange { background-color: white; border-color: #ffedd5; }
+    .dark .card-orange { background-color: #1e293b; border-color: #7c2d12; }
+
+    .card-slate { background-color: #f8fafc; border-color: #e2e8f0; }
+    .dark .card-slate { background-color: #0f172a; border-color: #334155; }
+    
+    /* 3D Icon Styles */
+    .icon-3d-wrapper {
+        perspective: 1000px;
+    }
+    .icon-3d {
+        transform-style: preserve-3d;
+        transition: transform 0.3s ease;
+        transform: rotateY(0deg) rotateX(0deg);
+    }
+    .icon-3d:hover {
+        transform: rotateY(10deg) rotateX(10deg) scale(1.05);
+    }
+</style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Inter, sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:JetBrains Mono, monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.bottom-6{bottom:1.5rem}.left-0{left:0px}.right-0{right:0px}.right-2{right:0.5rem}.right-6{right:1.5rem}.top-2{top:0.5rem}.top-full{top:100%}.z-10{z-index:10}.z-40{z-index:40}.z-50{z-index:50}.z-\[400\]{z-index:400}.z-\[500\]{z-index:500}.z-\[600\]{z-index:600}.z-\[60\]{z-index:60}.col-span-2{grid-column:span 2 / span 2}.mb-1{margin-bottom:0.25rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mt-0\.5{margin-top:0.125rem}.mt-2{margin-top:0.5rem}.mt-3{margin-top:0.75rem}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-10{height:2.5rem}.h-12{height:3rem}.h-16{height:4rem}.h-20{height:5rem}.h-32{height:8rem}.h-40{height:10rem}.h-8{height:2rem}.h-\[40\%\]{height:40%}.h-full{height:100%}.max-h-56{max-height:14rem}.max-h-\[60vh\]{max-height:60vh}.max-h-\[90vh\]{max-height:90vh}.min-h-0{min-height:0px}.min-h-\[200px\]{min-height:200px}.w-10{width:2.5rem}.w-12{width:3rem}.w-20{width:5rem}.w-4{width:1rem}.w-72{width:18rem}.w-8{width:2rem}.w-full{width:100%}.min-w-0{min-width:0px}.max-w-2xl{max-width:42rem}.max-w-7xl{max-width:80rem}.max-w-\[120px\]{max-width:120px}.max-w-sm{max-width:24rem}.max-w-xl{max-width:36rem}.flex-1{flex:1 1 0%}.flex-shrink-0{flex-shrink:0}.translate-y-32{--tw-translate-y:8rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes fadeIn{0%{opacity:0}100%{opacity:1}}.animate-fade-in{animation:fadeIn 0.2s ease-out}@keyframes popIn{0%{transform:scale(0.95);opacity:0}100%{transform:scale(1);opacity:1}}.animate-pop-in{animation:popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)}.cursor-pointer{cursor:pointer}.cursor-text{cursor:text}.resize-none{resize:none}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.flex-row{flex-direction:row}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.content-start{align-content:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-start{justify-content:flex-start}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-visible{overflow:visible}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-b-4{border-bottom-width:4px}.border-l-4{border-left-width:4px}.border-r{border-right-width:1px}.border-t{border-top-width:1px}.border-blue-500{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.border-blue-600{--tw-border-opacity:1;border-color:rgb(37 99 235 / var(--tw-border-opacity, 1))}.border-brand-100{--tw-border-opacity:1;border-color:rgb(224 231 255 / var(--tw-border-opacity, 1))}.border-brand-500{--tw-border-opacity:1;border-color:rgb(99 102 241 / var(--tw-border-opacity, 1))}.border-brand-600{--tw-border-opacity:1;border-color:rgb(79 70 229 / var(--tw-border-opacity, 1))}.border-brand-800{--tw-border-opacity:1;border-color:rgb(55 48 163 / var(--tw-border-opacity, 1))}.border-emerald-200{--tw-border-opacity:1;border-color:rgb(167 243 208 / var(--tw-border-opacity, 1))}.border-emerald-600{--tw-border-opacity:1;border-color:rgb(5 150 105 / var(--tw-border-opacity, 1))}.border-indigo-100{--tw-border-opacity:1;border-color:rgb(224 231 255 / var(--tw-border-opacity, 1))}.border-indigo-600{--tw-border-opacity:1;border-color:rgb(79 70 229 / var(--tw-border-opacity, 1))}.border-orange-200{--tw-border-opacity:1;border-color:rgb(254 215 170 / var(--tw-border-opacity, 1))}.border-orange-500{--tw-border-opacity:1;border-color:rgb(249 115 22 / var(--tw-border-opacity, 1))}.border-red-500{--tw-border-opacity:1;border-color:rgb(239 68 68 / var(--tw-border-opacity, 1))}.border-rose-600{--tw-border-opacity:1;border-color:rgb(225 29 72 / var(--tw-border-opacity, 1))}.border-slate-100{--tw-border-opacity:1;border-color:rgb(241 245 249 / var(--tw-border-opacity, 1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.border-slate-200\/50{border-color:rgb(226 232 240 / 0.5)}.border-slate-50{--tw-border-opacity:1;border-color:rgb(248 250 252 / var(--tw-border-opacity, 1))}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85 / var(--tw-border-opacity, 1))}.border-transparent{border-color:transparent}.border-yellow-100{--tw-border-opacity:1;border-color:rgb(254 249 195 / var(--tw-border-opacity, 1))}.border-yellow-500{--tw-border-opacity:1;border-color:rgb(234 179 8 / var(--tw-border-opacity, 1))}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235 / var(--tw-bg-opacity, 1))}.bg-brand-600{--tw-bg-opacity:1;background-color:rgb(79 70 229 / var(--tw-bg-opacity, 1))}.bg-emerald-100{--tw-bg-opacity:1;background-color:rgb(209 250 229 / var(--tw-bg-opacity, 1))}.bg-emerald-600{--tw-bg-opacity:1;background-color:rgb(5 150 105 / var(--tw-bg-opacity, 1))}.bg-indigo-100{--tw-bg-opacity:1;background-color:rgb(224 231 255 / var(--tw-bg-opacity, 1))}.bg-indigo-50{--tw-bg-opacity:1;background-color:rgb(238 242 255 / var(--tw-bg-opacity, 1))}.bg-indigo-600{--tw-bg-opacity:1;background-color:rgb(79 70 229 / var(--tw-bg-opacity, 1))}.bg-orange-100{--tw-bg-opacity:1;background-color:rgb(255 237 213 / var(--tw-bg-opacity, 1))}.bg-red-100{--tw-bg-opacity:1;background-color:rgb(254 226 226 / var(--tw-bg-opacity, 1))}.bg-rose-600{--tw-bg-opacity:1;background-color:rgb(225 29 72 / var(--tw-bg-opacity, 1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.bg-slate-50\/50{background-color:rgb(248 250 252 / 0.5)}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.bg-slate-900\/50{background-color:rgb(15 23 42 / 0.5)}.bg-slate-900\/60{background-color:rgb(15 23 42 / 0.6)}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/50{background-color:rgb(255 255 255 / 0.5)}.bg-yellow-50{--tw-bg-opacity:1;background-color:rgb(254 252 232 / var(--tw-bg-opacity, 1))}.bg-yellow-500{--tw-bg-opacity:1;background-color:rgb(234 179 8 / var(--tw-bg-opacity, 1))}.bg-gradient-to-br{background-image:linear-gradient(to bottom right, var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.from-brand-500{--tw-gradient-from:#6366f1 var(--tw-gradient-from-position);--tw-gradient-to:rgb(99 102 241 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-slate-800{--tw-gradient-from:#1e293b var(--tw-gradient-from-position);--tw-gradient-to:rgb(30 41 59 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-indigo-500{--tw-gradient-from:#6366f1 var(--tw-gradient-from-position);--tw-gradient-to:rgb(99 102 241 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.to-purple-600{--tw-gradient-to:#9333ea var(--tw-gradient-to-position)}.to-slate-500{--tw-gradient-to:#64748b var(--tw-gradient-to-position)}.bg-clip-text{-webkit-background-clip:text;background-clip:text}.p-0{padding:0px}.p-1{padding:0.25rem}.p-1\.5{padding:0.375rem}.p-2{padding:0.5rem}.p-3{padding:0.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.px-1{padding-left:0.25rem;padding-right:0.25rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-3\.5{padding-top:0.875rem;padding-bottom:0.875rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-5{padding-top:1.25rem;padding-bottom:1.25rem}.pt-0{padding-top:0px}.pt-4{padding-top:1rem}.text-left{text-align:left}.text-center{text-align:center}.font-mono{font-family:JetBrains Mono, monospace}.font-sans{font-family:Inter, sans-serif}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-\[10px\]{font-size:10px}.text-\[9px\]{font-size:9px}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-black{font-weight:900}.font-bold{font-weight:700}.uppercase{text-transform:uppercase}.lowercase{text-transform:lowercase}.capitalize{text-transform:capitalize}.italic{font-style:italic}.tabular-nums{--tw-numeric-spacing:tabular-nums;font-variant-numeric:var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction)}.leading-none{line-height:1}.leading-relaxed{line-height:1.625}.leading-tight{line-height:1.25}.tracking-wide{letter-spacing:0.025em}.tracking-wider{letter-spacing:0.05em}.tracking-widest{letter-spacing:0.1em}.text-blue-500{--tw-text-opacity:1;color:rgb(59 130 246 / var(--tw-text-opacity, 1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-blue-700{--tw-text-opacity:1;color:rgb(29 78 216 / var(--tw-text-opacity, 1))}.text-brand-400{--tw-text-opacity:1;color:rgb(129 140 248 / var(--tw-text-opacity, 1))}.text-brand-500{--tw-text-opacity:1;color:rgb(99 102 241 / var(--tw-text-opacity, 1))}.text-brand-600{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.text-brand-700{--tw-text-opacity:1;color:rgb(67 56 202 / var(--tw-text-opacity, 1))}.text-emerald-500{--tw-text-opacity:1;color:rgb(16 185 129 / var(--tw-text-opacity, 1))}.text-emerald-600{--tw-text-opacity:1;color:rgb(5 150 105 / var(--tw-text-opacity, 1))}.text-emerald-700{--tw-text-opacity:1;color:rgb(4 120 87 / var(--tw-text-opacity, 1))}.text-indigo-500{--tw-text-opacity:1;color:rgb(99 102 241 / var(--tw-text-opacity, 1))}.text-indigo-600{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.text-orange-500{--tw-text-opacity:1;color:rgb(249 115 22 / var(--tw-text-opacity, 1))}.text-orange-600{--tw-text-opacity:1;color:rgb(234 88 12 / var(--tw-text-opacity, 1))}.text-orange-700{--tw-text-opacity:1;color:rgb(194 65 12 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-rose-500{--tw-text-opacity:1;color:rgb(244 63 94 / var(--tw-text-opacity, 1))}.text-rose-600{--tw-text-opacity:1;color:rgb(225 29 72 / var(--tw-text-opacity, 1))}.text-rose-700{--tw-text-opacity:1;color:rgb(190 18 60 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.text-transparent{color:transparent}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-yellow-500{--tw-text-opacity:1;color:rgb(234 179 8 / var(--tw-text-opacity, 1))}.text-yellow-600{--tw-text-opacity:1;color:rgb(202 138 4 / var(--tw-text-opacity, 1))}.text-yellow-700{--tw-text-opacity:1;color:rgb(161 98 7 / var(--tw-text-opacity, 1))}.opacity-0{opacity:0}.opacity-50{opacity:0.5}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.outline-none{outline:2px solid transparent;outline-offset:2px}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.duration-500{transition-duration:500ms}.hover\:rotate-90:hover{--tw-rotate:90deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:scale-\[1\.02\]:hover{--tw-scale-x:1.02;--tw-scale-y:1.02;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:border-brand-500:hover{--tw-border-opacity:1;border-color:rgb(99 102 241 / var(--tw-border-opacity, 1))}.hover\:border-emerald-500:hover{--tw-border-opacity:1;border-color:rgb(16 185 129 / var(--tw-border-opacity, 1))}.hover\:border-rose-500:hover{--tw-border-opacity:1;border-color:rgb(244 63 94 / var(--tw-border-opacity, 1))}.hover\:border-slate-200:hover{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.hover\:bg-blue-700:hover{--tw-bg-opacity:1;background-color:rgb(29 78 216 / var(--tw-bg-opacity, 1))}.hover\:bg-brand-50:hover{--tw-bg-opacity:1;background-color:rgb(238 242 255 / var(--tw-bg-opacity, 1))}.hover\:bg-brand-700:hover{--tw-bg-opacity:1;background-color:rgb(67 56 202 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-200:hover{--tw-bg-opacity:1;background-color:rgb(199 210 254 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-700:hover{--tw-bg-opacity:1;background-color:rgb(67 56 202 / var(--tw-bg-opacity, 1))}.hover\:bg-orange-200:hover{--tw-bg-opacity:1;background-color:rgb(254 215 170 / var(--tw-bg-opacity, 1))}.hover\:bg-red-200:hover{--tw-bg-opacity:1;background-color:rgb(254 202 202 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-100:hover{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-200:hover{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-50:hover{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.hover\:bg-yellow-600:hover{--tw-bg-opacity:1;background-color:rgb(202 138 4 / var(--tw-bg-opacity, 1))}.hover\:text-brand-500:hover{--tw-text-opacity:1;color:rgb(99 102 241 / var(--tw-text-opacity, 1))}.hover\:text-brand-600:hover{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.hover\:text-emerald-500:hover{--tw-text-opacity:1;color:rgb(16 185 129 / var(--tw-text-opacity, 1))}.hover\:text-red-500:hover{--tw-text-opacity:1;color:rgb(239 68 68 / var(--tw-text-opacity, 1))}.hover\:text-rose-500:hover{--tw-text-opacity:1;color:rgb(244 63 94 / var(--tw-text-opacity, 1))}.hover\:text-slate-600:hover{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.hover\:text-slate-700:hover{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.hover\:shadow-xl:hover{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.focus\:border-brand-500:focus{--tw-border-opacity:1;border-color:rgb(99 102 241 / var(--tw-border-opacity, 1))}.focus\:border-orange-500:focus{--tw-border-opacity:1;border-color:rgb(249 115 22 / var(--tw-border-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-4:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-brand-100:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(224 231 255 / var(--tw-ring-opacity, 1))}.group:hover .group-hover\:scale-110{--tw-scale-x:1.1;--tw-scale-y:1.1;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:text-brand-500{--tw-text-opacity:1;color:rgb(99 102 241 / var(--tw-text-opacity, 1))}.dark\:border-emerald-800:is(.dark *){--tw-border-opacity:1;border-color:rgb(6 95 70 / var(--tw-border-opacity, 1))}.dark\:border-indigo-800\/50:is(.dark *){border-color:rgb(55 48 163 / 0.5)}.dark\:border-indigo-900\/30:is(.dark *){border-color:rgb(49 46 129 / 0.3)}.dark\:border-indigo-900\/50:is(.dark *){border-color:rgb(49 46 129 / 0.5)}.dark\:border-orange-800:is(.dark *){--tw-border-opacity:1;border-color:rgb(154 52 18 / var(--tw-border-opacity, 1))}.dark\:border-slate-200:is(.dark *){--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.dark\:border-slate-500:is(.dark *){--tw-border-opacity:1;border-color:rgb(100 116 139 / var(--tw-border-opacity, 1))}.dark\:border-slate-600:is(.dark *){--tw-border-opacity:1;border-color:rgb(71 85 105 / var(--tw-border-opacity, 1))}.dark\:border-slate-700:is(.dark *){--tw-border-opacity:1;border-color:rgb(51 65 85 / var(--tw-border-opacity, 1))}.dark\:border-slate-700\/50:is(.dark *){border-color:rgb(51 65 85 / 0.5)}.dark\:border-yellow-900\/50:is(.dark *){border-color:rgb(113 63 18 / 0.5)}.dark\:bg-emerald-900\/30:is(.dark *){background-color:rgb(6 78 59 / 0.3)}.dark\:bg-indigo-900\/20:is(.dark *){background-color:rgb(49 46 129 / 0.2)}.dark\:bg-indigo-900\/30:is(.dark *){background-color:rgb(49 46 129 / 0.3)}.dark\:bg-orange-900\/30:is(.dark *){background-color:rgb(124 45 18 / 0.3)}.dark\:bg-red-900\/30:is(.dark *){background-color:rgb(127 29 29 / 0.3)}.dark\:bg-slate-600:is(.dark *){--tw-bg-opacity:1;background-color:rgb(71 85 105 / var(--tw-bg-opacity, 1))}.dark\:bg-slate-700:is(.dark *){--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.dark\:bg-slate-700\/50:is(.dark *){background-color:rgb(51 65 85 / 0.5)}.dark\:bg-slate-800:is(.dark *){--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.dark\:bg-slate-800\/50:is(.dark *){background-color:rgb(30 41 59 / 0.5)}.dark\:bg-slate-900:is(.dark *){--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.dark\:bg-slate-900\/20:is(.dark *){background-color:rgb(15 23 42 / 0.2)}.dark\:bg-slate-900\/30:is(.dark *){background-color:rgb(15 23 42 / 0.3)}.dark\:bg-slate-900\/50:is(.dark *){background-color:rgb(15 23 42 / 0.5)}.dark\:bg-slate-950\/40:is(.dark *){background-color:rgb(2 6 23 / 0.4)}.dark\:bg-white:is(.dark *){--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.dark\:bg-yellow-900\/20:is(.dark *){background-color:rgb(113 63 18 / 0.2)}.dark\:from-white:is(.dark *){--tw-gradient-from:#fff var(--tw-gradient-from-position);--tw-gradient-to:rgb(255 255 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.dark\:to-slate-400:is(.dark *){--tw-gradient-to:#94a3b8 var(--tw-gradient-to-position)}.dark\:text-blue-300:is(.dark *){--tw-text-opacity:1;color:rgb(147 197 253 / var(--tw-text-opacity, 1))}.dark\:text-blue-400:is(.dark *){--tw-text-opacity:1;color:rgb(96 165 250 / var(--tw-text-opacity, 1))}.dark\:text-brand-400:is(.dark *){--tw-text-opacity:1;color:rgb(129 140 248 / var(--tw-text-opacity, 1))}.dark\:text-brand-600:is(.dark *){--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.dark\:text-emerald-200:is(.dark *){--tw-text-opacity:1;color:rgb(167 243 208 / var(--tw-text-opacity, 1))}.dark\:text-emerald-300:is(.dark *){--tw-text-opacity:1;color:rgb(110 231 183 / var(--tw-text-opacity, 1))}.dark\:text-emerald-400:is(.dark *){--tw-text-opacity:1;color:rgb(52 211 153 / var(--tw-text-opacity, 1))}.dark\:text-indigo-400:is(.dark *){--tw-text-opacity:1;color:rgb(129 140 248 / var(--tw-text-opacity, 1))}.dark\:text-orange-300:is(.dark *){--tw-text-opacity:1;color:rgb(253 186 116 / var(--tw-text-opacity, 1))}.dark\:text-orange-400:is(.dark *){--tw-text-opacity:1;color:rgb(251 146 60 / var(--tw-text-opacity, 1))}.dark\:text-red-400:is(.dark *){--tw-text-opacity:1;color:rgb(248 113 113 / var(--tw-text-opacity, 1))}.dark\:text-rose-200:is(.dark *){--tw-text-opacity:1;color:rgb(254 205 211 / var(--tw-text-opacity, 1))}.dark\:text-rose-300:is(.dark *){--tw-text-opacity:1;color:rgb(253 164 175 / var(--tw-text-opacity, 1))}.dark\:text-rose-400:is(.dark *){--tw-text-opacity:1;color:rgb(251 113 133 / var(--tw-text-opacity, 1))}.dark\:text-slate-200:is(.dark *){--tw-text-opacity:1;color:rgb(226 232 240 / var(--tw-text-opacity, 1))}.dark\:text-slate-300:is(.dark *){--tw-text-opacity:1;color:rgb(203 213 225 / var(--tw-text-opacity, 1))}.dark\:text-slate-400:is(.dark *){--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.dark\:text-slate-900:is(.dark *){--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.dark\:text-white:is(.dark *){--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.dark\:text-yellow-300:is(.dark *){--tw-text-opacity:1;color:rgb(253 224 71 / var(--tw-text-opacity, 1))}.dark\:text-yellow-400:is(.dark *){--tw-text-opacity:1;color:rgb(250 204 21 / var(--tw-text-opacity, 1))}.dark\:hover\:border-brand-700:hover:is(.dark *){--tw-border-opacity:1;border-color:rgb(67 56 202 / var(--tw-border-opacity, 1))}.dark\:hover\:border-slate-600:hover:is(.dark *){--tw-border-opacity:1;border-color:rgb(71 85 105 / var(--tw-border-opacity, 1))}.dark\:hover\:bg-slate-700:hover:is(.dark *){--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.dark\:hover\:text-slate-200:hover:is(.dark *){--tw-text-opacity:1;color:rgb(226 232 240 / var(--tw-text-opacity, 1))}.dark\:focus\:border-orange-500:focus:is(.dark *){--tw-border-opacity:1;border-color:rgb(249 115 22 / var(--tw-border-opacity, 1))}@media (min-width: 768px){.md\:flex{display:flex}.md\:h-12{height:3rem}.md\:w-12{width:3rem}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.md\:grid-cols-5{grid-template-columns:repeat(5, minmax(0, 1fr))}.md\:gap-6{gap:1.5rem}.md\:p-6{padding:1.5rem}.md\:text-2xl{font-size:1.5rem;line-height:2rem}.md\:text-xl{font-size:1.25rem;line-height:1.75rem}}</style><style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Inter, sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:JetBrains Mono, monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.inset-0{inset:0px}.bottom-6{bottom:1.5rem}.left-0{left:0px}.right-0{right:0px}.right-2{right:0.5rem}.right-6{right:1.5rem}.top-2{top:0.5rem}.top-full{top:100%}.top-0{top:0px}.top-8{top:2rem}.z-10{z-index:10}.z-40{z-index:40}.z-50{z-index:50}.z-\[400\]{z-index:400}.z-\[500\]{z-index:500}.z-\[600\]{z-index:600}.z-\[60\]{z-index:60}.z-20{z-index:20}.col-span-2{grid-column:span 2 / span 2}.mb-1{margin-bottom:0.25rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mt-0\.5{margin-top:0.125rem}.mt-2{margin-top:0.5rem}.mt-3{margin-top:0.75rem}.mr-3{margin-right:0.75rem}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-10{height:2.5rem}.h-12{height:3rem}.h-16{height:4rem}.h-20{height:5rem}.h-32{height:8rem}.h-40{height:10rem}.h-8{height:2rem}.h-\[40\%\]{height:40%}.h-full{height:100%}.h-3\.5{height:0.875rem}.max-h-56{max-height:14rem}.max-h-\[60vh\]{max-height:60vh}.max-h-\[90vh\]{max-height:90vh}.min-h-0{min-height:0px}.min-h-\[200px\]{min-height:200px}.w-10{width:2.5rem}.w-12{width:3rem}.w-20{width:5rem}.w-4{width:1rem}.w-72{width:18rem}.w-8{width:2rem}.w-full{width:100%}.w-3\.5{width:0.875rem}.w-px{width:1px}.min-w-0{min-width:0px}.max-w-2xl{max-width:42rem}.max-w-7xl{max-width:80rem}.max-w-\[120px\]{max-width:120px}.max-w-sm{max-width:24rem}.max-w-xl{max-width:36rem}.flex-1{flex:1 1 0%}.flex-shrink-0{flex-shrink:0}.translate-y-32{--tw-translate-y:8rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes fadeIn{0%{opacity:0}100%{opacity:1}}.animate-fade-in{animation:fadeIn 0.2s ease-out}@keyframes popIn{0%{transform:scale(0.95);opacity:0}100%{transform:scale(1);opacity:1}}.animate-pop-in{animation:popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)}.cursor-pointer{cursor:pointer}.cursor-text{cursor:text}.resize-none{resize:none}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.flex-row{flex-direction:row}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.content-start{align-content:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-start{justify-content:flex-start}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-visible{overflow:visible}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.rounded-xl{border-radius:0.75rem}.rounded{border-radius:0.25rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-b-4{border-bottom-width:4px}.border-l-4{border-left-width:4px}.border-r{border-right-width:1px}.border-t{border-top-width:1px}.border-blue-500{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.border-blue-600{--tw-border-opacity:1;border-color:rgb(37 99 235 / var(--tw-border-opacity, 1))}.border-brand-100{--tw-border-opacity:1;border-color:rgb(224 231 255 / var(--tw-border-opacity, 1))}.border-brand-500{--tw-border-opacity:1;border-color:rgb(99 102 241 / var(--tw-border-opacity, 1))}.border-brand-600{--tw-border-opacity:1;border-color:rgb(79 70 229 / var(--tw-border-opacity, 1))}.border-brand-800{--tw-border-opacity:1;border-color:rgb(55 48 163 / var(--tw-border-opacity, 1))}.border-emerald-200{--tw-border-opacity:1;border-color:rgb(167 243 208 / var(--tw-border-opacity, 1))}.border-emerald-600{--tw-border-opacity:1;border-color:rgb(5 150 105 / var(--tw-border-opacity, 1))}.border-indigo-100{--tw-border-opacity:1;border-color:rgb(224 231 255 / var(--tw-border-opacity, 1))}.border-indigo-600{--tw-border-opacity:1;border-color:rgb(79 70 229 / var(--tw-border-opacity, 1))}.border-orange-200{--tw-border-opacity:1;border-color:rgb(254 215 170 / var(--tw-border-opacity, 1))}.border-orange-500{--tw-border-opacity:1;border-color:rgb(249 115 22 / var(--tw-border-opacity, 1))}.border-red-500{--tw-border-opacity:1;border-color:rgb(239 68 68 / var(--tw-border-opacity, 1))}.border-rose-600{--tw-border-opacity:1;border-color:rgb(225 29 72 / var(--tw-border-opacity, 1))}.border-slate-100{--tw-border-opacity:1;border-color:rgb(241 245 249 / var(--tw-border-opacity, 1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.border-slate-200\/50{border-color:rgb(226 232 240 / 0.5)}.border-slate-50{--tw-border-opacity:1;border-color:rgb(248 250 252 / var(--tw-border-opacity, 1))}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85 / var(--tw-border-opacity, 1))}.border-transparent{border-color:transparent}.border-yellow-100{--tw-border-opacity:1;border-color:rgb(254 249 195 / var(--tw-border-opacity, 1))}.border-yellow-500{--tw-border-opacity:1;border-color:rgb(234 179 8 / var(--tw-border-opacity, 1))}.border-slate-300{--tw-border-opacity:1;border-color:rgb(203 213 225 / var(--tw-border-opacity, 1))}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235 / var(--tw-bg-opacity, 1))}.bg-brand-600{--tw-bg-opacity:1;background-color:rgb(79 70 229 / var(--tw-bg-opacity, 1))}.bg-emerald-100{--tw-bg-opacity:1;background-color:rgb(209 250 229 / var(--tw-bg-opacity, 1))}.bg-emerald-600{--tw-bg-opacity:1;background-color:rgb(5 150 105 / var(--tw-bg-opacity, 1))}.bg-indigo-100{--tw-bg-opacity:1;background-color:rgb(224 231 255 / var(--tw-bg-opacity, 1))}.bg-indigo-50{--tw-bg-opacity:1;background-color:rgb(238 242 255 / var(--tw-bg-opacity, 1))}.bg-indigo-600{--tw-bg-opacity:1;background-color:rgb(79 70 229 / var(--tw-bg-opacity, 1))}.bg-orange-100{--tw-bg-opacity:1;background-color:rgb(255 237 213 / var(--tw-bg-opacity, 1))}.bg-red-100{--tw-bg-opacity:1;background-color:rgb(254 226 226 / var(--tw-bg-opacity, 1))}.bg-rose-600{--tw-bg-opacity:1;background-color:rgb(225 29 72 / var(--tw-bg-opacity, 1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.bg-slate-50\/50{background-color:rgb(248 250 252 / 0.5)}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.bg-slate-900\/50{background-color:rgb(15 23 42 / 0.5)}.bg-slate-900\/60{background-color:rgb(15 23 42 / 0.6)}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/50{background-color:rgb(255 255 255 / 0.5)}.bg-yellow-50{--tw-bg-opacity:1;background-color:rgb(254 252 232 / var(--tw-bg-opacity, 1))}.bg-yellow-500{--tw-bg-opacity:1;background-color:rgb(234 179 8 / var(--tw-bg-opacity, 1))}.bg-brand-100{--tw-bg-opacity:1;background-color:rgb(224 231 255 / var(--tw-bg-opacity, 1))}.bg-gradient-to-br{background-image:linear-gradient(to bottom right, var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.from-brand-500{--tw-gradient-from:#6366f1 var(--tw-gradient-from-position);--tw-gradient-to:rgb(99 102 241 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-indigo-500{--tw-gradient-from:#6366f1 var(--tw-gradient-from-position);--tw-gradient-to:rgb(99 102 241 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-slate-800{--tw-gradient-from:#1e293b var(--tw-gradient-from-position);--tw-gradient-to:rgb(30 41 59 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-emerald-500{--tw-gradient-from:#10b981 var(--tw-gradient-from-position);--tw-gradient-to:rgb(16 185 129 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-yellow-400{--tw-gradient-from:#facc15 var(--tw-gradient-from-position);--tw-gradient-to:rgb(250 204 21 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-orange-500{--tw-gradient-from:#f97316 var(--tw-gradient-from-position);--tw-gradient-to:rgb(249 115 22 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-rose-500{--tw-gradient-from:#f43f5e var(--tw-gradient-from-position);--tw-gradient-to:rgb(244 63 94 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-blue-500{--tw-gradient-from:#3b82f6 var(--tw-gradient-from-position);--tw-gradient-to:rgb(59 130 246 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.to-purple-600{--tw-gradient-to:#9333ea var(--tw-gradient-to-position)}.to-slate-500{--tw-gradient-to:#64748b var(--tw-gradient-to-position)}.to-teal-600{--tw-gradient-to:#0d9488 var(--tw-gradient-to-position)}.to-orange-500{--tw-gradient-to:#f97316 var(--tw-gradient-to-position)}.to-amber-600{--tw-gradient-to:#d97706 var(--tw-gradient-to-position)}.to-pink-600{--tw-gradient-to:#db2777 var(--tw-gradient-to-position)}.to-cyan-600{--tw-gradient-to:#0891b2 var(--tw-gradient-to-position)}.bg-clip-text{-webkit-background-clip:text;background-clip:text}.p-0{padding:0px}.p-1{padding:0.25rem}.p-1\.5{padding:0.375rem}.p-2{padding:0.5rem}.p-3{padding:0.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.px-1{padding-left:0.25rem;padding-right:0.25rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-3\.5{padding-top:0.875rem;padding-bottom:0.875rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-5{padding-top:1.25rem;padding-bottom:1.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.pt-0{padding-top:0px}.pt-4{padding-top:1rem}.text-left{text-align:left}.text-center{text-align:center}.font-mono{font-family:JetBrains Mono, monospace}.font-sans{font-family:Inter, sans-serif}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-\[10px\]{font-size:10px}.text-\[9px\]{font-size:9px}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.text-\[11px\]{font-size:11px}.text-\[8px\]{font-size:8px}.font-black{font-weight:900}.font-bold{font-weight:700}.uppercase{text-transform:uppercase}.lowercase{text-transform:lowercase}.capitalize{text-transform:capitalize}.normal-case{text-transform:none}.italic{font-style:italic}.tabular-nums{--tw-numeric-spacing:tabular-nums;font-variant-numeric:var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction)}.leading-none{line-height:1}.leading-relaxed{line-height:1.625}.leading-tight{line-height:1.25}.tracking-wide{letter-spacing:0.025em}.tracking-wider{letter-spacing:0.05em}.tracking-widest{letter-spacing:0.1em}.text-blue-500{--tw-text-opacity:1;color:rgb(59 130 246 / var(--tw-text-opacity, 1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-blue-700{--tw-text-opacity:1;color:rgb(29 78 216 / var(--tw-text-opacity, 1))}.text-brand-400{--tw-text-opacity:1;color:rgb(129 140 248 / var(--tw-text-opacity, 1))}.text-brand-500{--tw-text-opacity:1;color:rgb(99 102 241 / var(--tw-text-opacity, 1))}.text-brand-600{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.text-brand-700{--tw-text-opacity:1;color:rgb(67 56 202 / var(--tw-text-opacity, 1))}.text-emerald-500{--tw-text-opacity:1;color:rgb(16 185 129 / var(--tw-text-opacity, 1))}.text-emerald-600{--tw-text-opacity:1;color:rgb(5 150 105 / var(--tw-text-opacity, 1))}.text-emerald-700{--tw-text-opacity:1;color:rgb(4 120 87 / var(--tw-text-opacity, 1))}.text-indigo-500{--tw-text-opacity:1;color:rgb(99 102 241 / var(--tw-text-opacity, 1))}.text-indigo-600{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.text-orange-500{--tw-text-opacity:1;color:rgb(249 115 22 / var(--tw-text-opacity, 1))}.text-orange-600{--tw-text-opacity:1;color:rgb(234 88 12 / var(--tw-text-opacity, 1))}.text-orange-700{--tw-text-opacity:1;color:rgb(194 65 12 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-rose-500{--tw-text-opacity:1;color:rgb(244 63 94 / var(--tw-text-opacity, 1))}.text-rose-600{--tw-text-opacity:1;color:rgb(225 29 72 / var(--tw-text-opacity, 1))}.text-rose-700{--tw-text-opacity:1;color:rgb(190 18 60 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.text-transparent{color:transparent}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-yellow-500{--tw-text-opacity:1;color:rgb(234 179 8 / var(--tw-text-opacity, 1))}.text-yellow-600{--tw-text-opacity:1;color:rgb(202 138 4 / var(--tw-text-opacity, 1))}.text-yellow-700{--tw-text-opacity:1;color:rgb(161 98 7 / var(--tw-text-opacity, 1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68 / var(--tw-text-opacity, 1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225 / var(--tw-text-opacity, 1))}.opacity-0{opacity:0}.opacity-50{opacity:0.5}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.outline-none{outline:2px solid transparent;outline-offset:2px}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.duration-500{transition-duration:500ms}.hover\:rotate-90:hover{--tw-rotate:90deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:scale-\[1\.02\]:hover{--tw-scale-x:1.02;--tw-scale-y:1.02;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:border-brand-500:hover{--tw-border-opacity:1;border-color:rgb(99 102 241 / var(--tw-border-opacity, 1))}.hover\:border-emerald-500:hover{--tw-border-opacity:1;border-color:rgb(16 185 129 / var(--tw-border-opacity, 1))}.hover\:border-rose-500:hover{--tw-border-opacity:1;border-color:rgb(244 63 94 / var(--tw-border-opacity, 1))}.hover\:border-slate-200:hover{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.hover\:bg-blue-700:hover{--tw-bg-opacity:1;background-color:rgb(29 78 216 / var(--tw-bg-opacity, 1))}.hover\:bg-brand-50:hover{--tw-bg-opacity:1;background-color:rgb(238 242 255 / var(--tw-bg-opacity, 1))}.hover\:bg-brand-700:hover{--tw-bg-opacity:1;background-color:rgb(67 56 202 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-200:hover{--tw-bg-opacity:1;background-color:rgb(199 210 254 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-700:hover{--tw-bg-opacity:1;background-color:rgb(67 56 202 / var(--tw-bg-opacity, 1))}.hover\:bg-orange-200:hover{--tw-bg-opacity:1;background-color:rgb(254 215 170 / var(--tw-bg-opacity, 1))}.hover\:bg-red-200:hover{--tw-bg-opacity:1;background-color:rgb(254 202 202 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-100:hover{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-200:hover{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-50:hover{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.hover\:bg-yellow-600:hover{--tw-bg-opacity:1;background-color:rgb(202 138 4 / var(--tw-bg-opacity, 1))}.hover\:bg-red-50:hover{--tw-bg-opacity:1;background-color:rgb(254 242 242 / var(--tw-bg-opacity, 1))}.hover\:text-brand-500:hover{--tw-text-opacity:1;color:rgb(99 102 241 / var(--tw-text-opacity, 1))}.hover\:text-brand-600:hover{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.hover\:text-emerald-500:hover{--tw-text-opacity:1;color:rgb(16 185 129 / var(--tw-text-opacity, 1))}.hover\:text-red-500:hover{--tw-text-opacity:1;color:rgb(239 68 68 / var(--tw-text-opacity, 1))}.hover\:text-rose-500:hover{--tw-text-opacity:1;color:rgb(244 63 94 / var(--tw-text-opacity, 1))}.hover\:text-slate-600:hover{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.hover\:text-slate-700:hover{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.hover\:shadow-xl:hover{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.focus\:border-brand-500:focus{--tw-border-opacity:1;border-color:rgb(99 102 241 / var(--tw-border-opacity, 1))}.focus\:border-orange-500:focus{--tw-border-opacity:1;border-color:rgb(249 115 22 / var(--tw-border-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-4:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-brand-100:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(224 231 255 / var(--tw-ring-opacity, 1))}.group:hover .group-hover\:scale-110{--tw-scale-x:1.1;--tw-scale-y:1.1;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:text-brand-500{--tw-text-opacity:1;color:rgb(99 102 241 / var(--tw-text-opacity, 1))}.dark\:border-emerald-800:is(.dark *){--tw-border-opacity:1;border-color:rgb(6 95 70 / var(--tw-border-opacity, 1))}.dark\:border-indigo-800\/50:is(.dark *){border-color:rgb(55 48 163 / 0.5)}.dark\:border-indigo-900\/30:is(.dark *){border-color:rgb(49 46 129 / 0.3)}.dark\:border-indigo-900\/50:is(.dark *){border-color:rgb(49 46 129 / 0.5)}.dark\:border-orange-800:is(.dark *){--tw-border-opacity:1;border-color:rgb(154 52 18 / var(--tw-border-opacity, 1))}.dark\:border-slate-200:is(.dark *){--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.dark\:border-slate-500:is(.dark *){--tw-border-opacity:1;border-color:rgb(100 116 139 / var(--tw-border-opacity, 1))}.dark\:border-slate-600:is(.dark *){--tw-border-opacity:1;border-color:rgb(71 85 105 / var(--tw-border-opacity, 1))}.dark\:border-slate-700:is(.dark *){--tw-border-opacity:1;border-color:rgb(51 65 85 / var(--tw-border-opacity, 1))}.dark\:border-slate-700\/50:is(.dark *){border-color:rgb(51 65 85 / 0.5)}.dark\:border-yellow-900\/50:is(.dark *){border-color:rgb(113 63 18 / 0.5)}.dark\:border-slate-700\/30:is(.dark *){border-color:rgb(51 65 85 / 0.3)}.dark\:border-brand-800:is(.dark *){--tw-border-opacity:1;border-color:rgb(55 48 163 / var(--tw-border-opacity, 1))}.dark\:bg-emerald-900\/30:is(.dark *){background-color:rgb(6 78 59 / 0.3)}.dark\:bg-indigo-900\/20:is(.dark *){background-color:rgb(49 46 129 / 0.2)}.dark\:bg-indigo-900\/30:is(.dark *){background-color:rgb(49 46 129 / 0.3)}.dark\:bg-orange-900\/30:is(.dark *){background-color:rgb(124 45 18 / 0.3)}.dark\:bg-red-900\/30:is(.dark *){background-color:rgb(127 29 29 / 0.3)}.dark\:bg-slate-600:is(.dark *){--tw-bg-opacity:1;background-color:rgb(71 85 105 / var(--tw-bg-opacity, 1))}.dark\:bg-slate-700:is(.dark *){--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.dark\:bg-slate-700\/50:is(.dark *){background-color:rgb(51 65 85 / 0.5)}.dark\:bg-slate-800:is(.dark *){--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.dark\:bg-slate-800\/50:is(.dark *){background-color:rgb(30 41 59 / 0.5)}.dark\:bg-slate-900:is(.dark *){--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.dark\:bg-slate-900\/20:is(.dark *){background-color:rgb(15 23 42 / 0.2)}.dark\:bg-slate-900\/30:is(.dark *){background-color:rgb(15 23 42 / 0.3)}.dark\:bg-slate-900\/50:is(.dark *){background-color:rgb(15 23 42 / 0.5)}.dark\:bg-slate-950\/40:is(.dark *){background-color:rgb(2 6 23 / 0.4)}.dark\:bg-white:is(.dark *){--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.dark\:bg-yellow-900\/20:is(.dark *){background-color:rgb(113 63 18 / 0.2)}.dark\:from-white:is(.dark *){--tw-gradient-from:#fff var(--tw-gradient-from-position);--tw-gradient-to:rgb(255 255 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.dark\:to-slate-400:is(.dark *){--tw-gradient-to:#94a3b8 var(--tw-gradient-to-position)}.dark\:text-blue-300:is(.dark *){--tw-text-opacity:1;color:rgb(147 197 253 / var(--tw-text-opacity, 1))}.dark\:text-blue-400:is(.dark *){--tw-text-opacity:1;color:rgb(96 165 250 / var(--tw-text-opacity, 1))}.dark\:text-brand-400:is(.dark *){--tw-text-opacity:1;color:rgb(129 140 248 / var(--tw-text-opacity, 1))}.dark\:text-brand-600:is(.dark *){--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.dark\:text-emerald-200:is(.dark *){--tw-text-opacity:1;color:rgb(167 243 208 / var(--tw-text-opacity, 1))}.dark\:text-emerald-300:is(.dark *){--tw-text-opacity:1;color:rgb(110 231 183 / var(--tw-text-opacity, 1))}.dark\:text-emerald-400:is(.dark *){--tw-text-opacity:1;color:rgb(52 211 153 / var(--tw-text-opacity, 1))}.dark\:text-indigo-400:is(.dark *){--tw-text-opacity:1;color:rgb(129 140 248 / var(--tw-text-opacity, 1))}.dark\:text-orange-300:is(.dark *){--tw-text-opacity:1;color:rgb(253 186 116 / var(--tw-text-opacity, 1))}.dark\:text-orange-400:is(.dark *){--tw-text-opacity:1;color:rgb(251 146 60 / var(--tw-text-opacity, 1))}.dark\:text-red-400:is(.dark *){--tw-text-opacity:1;color:rgb(248 113 113 / var(--tw-text-opacity, 1))}.dark\:text-rose-200:is(.dark *){--tw-text-opacity:1;color:rgb(254 205 211 / var(--tw-text-opacity, 1))}.dark\:text-rose-300:is(.dark *){--tw-text-opacity:1;color:rgb(253 164 175 / var(--tw-text-opacity, 1))}.dark\:text-rose-400:is(.dark *){--tw-text-opacity:1;color:rgb(251 113 133 / var(--tw-text-opacity, 1))}.dark\:text-slate-200:is(.dark *){--tw-text-opacity:1;color:rgb(226 232 240 / var(--tw-text-opacity, 1))}.dark\:text-slate-300:is(.dark *){--tw-text-opacity:1;color:rgb(203 213 225 / var(--tw-text-opacity, 1))}.dark\:text-slate-400:is(.dark *){--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.dark\:text-slate-900:is(.dark *){--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.dark\:text-white:is(.dark *){--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.dark\:text-yellow-300:is(.dark *){--tw-text-opacity:1;color:rgb(253 224 71 / var(--tw-text-opacity, 1))}.dark\:text-yellow-400:is(.dark *){--tw-text-opacity:1;color:rgb(250 204 21 / var(--tw-text-opacity, 1))}.dark\:text-slate-600:is(.dark *){--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.dark\:hover\:border-brand-700:hover:is(.dark *){--tw-border-opacity:1;border-color:rgb(67 56 202 / var(--tw-border-opacity, 1))}.dark\:hover\:border-slate-600:hover:is(.dark *){--tw-border-opacity:1;border-color:rgb(71 85 105 / var(--tw-border-opacity, 1))}.dark\:hover\:bg-slate-700:hover:is(.dark *){--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.dark\:hover\:bg-red-900\/20:hover:is(.dark *){background-color:rgb(127 29 29 / 0.2)}.dark\:hover\:text-slate-200:hover:is(.dark *){--tw-text-opacity:1;color:rgb(226 232 240 / var(--tw-text-opacity, 1))}.dark\:focus\:border-orange-500:focus:is(.dark *){--tw-border-opacity:1;border-color:rgb(249 115 22 / var(--tw-border-opacity, 1))}@media (min-width: 768px){.md\:flex{display:flex}.md\:h-12{height:3rem}.md\:w-12{width:3rem}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.md\:grid-cols-5{grid-template-columns:repeat(5, minmax(0, 1fr))}.md\:gap-6{gap:1.5rem}.md\:p-6{padding:1.5rem}.md\:text-2xl{font-size:1.5rem;line-height:2rem}.md\:text-xl{font-size:1.25rem;line-height:1.75rem}}</style></head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300 font-sans flex flex-row h-full w-full overflow-hidden">
+<!-- HIDDEN STORAGE -->
+<div id="storage-area" style="display:none;">
+<textarea id="tpl-future">{SYMBOLS} (FUTURES) TENDER ALERT - {DATE}
+
+{SYMBOLS} (FUTURES) ({EXPIRY}) Contract Tender Period Starts Today. Contract Will Be Blocked @ 10:15 PM . If Client Have Any Open Position To Be Closed Before 10:30 PM Today ({TENDER}) .Otherwise RMS Team Will Be Square Off The Positions.</textarea>
+<textarea id="tpl-option">{SYMBOLS} (OPTIONS) EXPIRY ALERT - {DATE}
+
+{SYMBOLS} (OPTIONS) ({EXPIRY}) Contracts Are Expiry Today. Contract Will Be Blocked @ 10:15 PM . If Client Have Any Open Position To Be Closed Before 10:30 PM Today ({TENDER}) .Otherwise RMS Team Will Be Square Off The Positions.</textarea>
+<textarea id="tpl-ob-header">Opening Bell 🔔
+
+</textarea>
+<textarea id="tpl-ob-line">🔷 {CONTENT}</textarea>
+<textarea id="tpl-market">📢 MARKET UPDATES 📰</textarea>
+<textarea id="tpl-global">🌎 GLOBAL CUES 📰</textarea>
+<textarea id="tpl-data">📢 DATA ALERT</textarea>
+<textarea id="data-bell-config">{ "arrows": { "up": "⬆️ ", "down": "⬇️ " }, "replacements": { "NEAR": "AT" } }</textarea>
+<textarea id="data-symbols">{
+    "future": [
+        { "group": "BULLIONS", "instruments": ["GOLD", "GOLDM", "GOLDGUINEA", "GOLDTEN", "GOLDPETAL", "SILVER", "SILVERM", "SILVERMIC"] },
+        { "group": "ENERGY", "instruments": ["CRUDEOIL", "CRUDEOILM", "NATURALGAS", "NATGASMINI"] },
+        { "group": "BASE METALS", "instruments": ["COPPER", "ALUMINIINIUM", "ALUMINI", "LEAD", "LEADMINI", "ZINC", "ZINCMINI"] }
+    ],
+    "option": [
+        { "group": "BULLIONS", "instruments": ["GOLD", "GOLDM", "SILVER", "SILVERM"] },
+        { "group": "ENERGY", "instruments": ["CRUDEOIL", "CRUDEOILM", "NATURALGAS", "NATGASMINI"] },
+        { "group": "BASE METALS", "instruments": ["COPPER", "ZINC", "NICKEL", "ALUMINIUM"] }
+    ]
+}</textarea>
+<textarea id="data-todos">[]</textarea>
+<textarea id="data-expiry">[]</textarea>
+<textarea id="data-messages">[]</textarea>
+</div>
+<!-- 1. Left Sidebar Navigation (Icon Only) -->
+<aside class="w-20 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col transition-all duration-300 z-50 flex-shrink-0 items-center">
+<!-- Brand -->
+<div class="h-20 flex items-center justify-center border-b border-slate-100 dark:border-slate-700/50 w-full mb-2">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center text-white shadow-lg flex-shrink-0 cursor-pointer" onclick="window.app.setTab('dashboard')">
+<i class="fas fa-bolt text-lg"></i>
+</div>
+</div>
+<!-- Nav Items (Centered Icons with Color) -->
+<nav class="flex-1 overflow-y-auto custom-scroll py-4 flex flex-col gap-3 px-2 w-full items-center">
+<button class="nav-item w-12 h-12 flex items-center justify-center active" id="nav-dashboard" onclick="window.app.setTab('dashboard')">
+<i class="fas fa-home text-xl text-indigo-500 dark:text-indigo-400"></i>
+</button>
+<button class="nav-item w-12 h-12 flex items-center justify-center" id="nav-opening-bell" onclick="window.app.setTab('opening-bell')">
+<i class="fas fa-bell text-xl text-yellow-500 dark:text-yellow-400"></i>
+</button>
+<button class="nav-item w-12 h-12 flex items-center justify-center" id="nav-fno" onclick="window.app.setTab('fno')">
+<i class="fas fa-bullhorn text-xl text-emerald-500 dark:text-emerald-400"></i>
+</button>
+<button class="nav-item w-12 h-12 flex items-center justify-center" id="nav-expiry" onclick="window.app.setTab('expiry')">
+<i class="fas fa-calendar-times text-xl text-rose-500 dark:text-rose-400"></i>
+</button>
+<button class="nav-item w-12 h-12 flex items-center justify-center" id="nav-message" onclick="window.app.setTab('message')">
+<i class="fas fa-comment-alt text-xl text-blue-500 dark:text-blue-400"></i>
+</button>
+<button class="nav-item w-12 h-12 flex items-center justify-center" id="nav-todo" onclick="window.app.setTab('todo')">
+<i class="fas fa-list-check text-xl text-orange-500 dark:text-orange-400"></i>
+</button>
+</nav>
+<!-- Bottom Action -->
+<div class="p-4 border-t border-slate-100 dark:border-slate-700/50 w-full flex justify-center">
+<button class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-600 flex items-center justify-center transition-colors group relative" onclick="window.app.openDownload()">
+<i class="fas fa-cloud-download-alt text-lg group-hover:text-brand-500"></i>
+</button>
+</div>
+</aside>
+<!-- Right Main Wrapper -->
+<div class="flex-1 flex flex-col h-full min-w-0 bg-slate-50 dark:bg-slate-900 transition-colors duration-300 relative">
+<!-- Top Header: Wish Only -->
+<header class="h-20 flex-shrink-0 px-6 flex items-center justify-between z-40 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-700/50">
+<!-- Page Title Context -->
+<div>
+<div class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-800 to-slate-500 dark:from-white dark:to-slate-400 uppercase tracking-widest leading-none" id="header-greeting">good morning</div>
+</div>
+<!-- Right Side Cluster -->
+<div class="flex items-center gap-6">
+<!-- Time & Date -->
+<div class="hidden md:flex flex-col items-end justify-center">
+<div class="text-sm font-mono font-bold leading-none text-slate-700 dark:text-slate-200 tabular-nums" id="live-time">07:09:10</div>
+<div class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-0.5" id="live-date">fri, 26-dec-2025</div>
+</div>
+<!-- Settings -->
+<div class="relative">
+<button class="w-8 h-8 rounded-full bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 hover:border-brand-300 dark:hover:border-brand-700 flex items-center justify-center transition-all text-slate-600 dark:text-slate-400 focus:outline-none" id="settings-btn" onclick="window.app.toggleSettings()">
+<i class="fas fa-cog text-xs transition-transform duration-500 hover:rotate-90"></i>
+</button>
+<!-- Settings Dropdown -->
+<div class="absolute right-0 top-full mt-3 w-72 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden z-[60] pop-in hidden" id="settings-menu">
+<div class="px-4 py-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 flex justify-between items-center">
+<span class="text-[10px] font-black uppercase tracking-widest text-slate-500">System Preferences</span>
+<i class="fas fa-sliders-h text-slate-400 text-xs"></i>
+</div>
+<!-- Date Format Toggle -->
+<button class="w-full text-left px-4 py-3 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex justify-between items-center transition-colors border-b border-slate-50 dark:border-slate-700/50" onclick="window.app.cycleDateFormat()">
+<span class="flex items-center gap-3"><i class="fas fa-calendar-alt w-4 text-center text-slate-400"></i> Date Format</span>
+<span class="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 px-2 py-1 rounded-md text-[9px] border border-indigo-100 dark:border-indigo-800/50 truncate max-w-[120px]" id="date-badge">DD-MMM-YYYY</span>
+</button>
+<!-- Text Case Grid -->
+<div class="p-4 bg-slate-50/50 dark:bg-slate-900/20">
+<div class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 px-1">Text Transformation</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 rounded-lg bg-white dark:bg-slate-700 text-[10px] font-bold text-slate-600 dark:text-slate-300 hover:bg-brand-50 dark:hover:bg-brand-900/20 hover:text-brand-600 border border-slate-200 dark:border-slate-600 hover:border-brand-200 transition-all uppercase shadow-sm" onclick="window.app.setCase('upper')">UPPER</button>
+<button class="py-2 rounded-lg bg-white dark:bg-slate-700 text-[10px] font-bold text-slate-600 dark:text-slate-300 hover:bg-brand-50 dark:hover:bg-brand-900/20 hover:text-brand-600 border border-slate-200 dark:border-slate-600 hover:border-brand-200 transition-all lowercase shadow-sm" onclick="window.app.setCase('lower')">lower</button>
+<button class="py-2 rounded-lg bg-white dark:bg-slate-700 text-[10px] font-bold text-slate-600 dark:text-slate-300 hover:bg-brand-50 dark:hover:bg-brand-900/20 hover:text-brand-600 border border-slate-200 dark:border-slate-600 hover:border-brand-200 transition-all capitalize shadow-sm" onclick="window.app.setCase('title')">Title Case</button>
+<button class="py-2 rounded-lg bg-white dark:bg-slate-700 text-[10px] font-bold text-slate-600 dark:text-slate-300 hover:bg-brand-50 dark:hover:bg-brand-900/20 hover:text-brand-600 border border-slate-200 dark:border-slate-600 hover:border-brand-200 transition-all shadow-sm" onclick="window.app.setCase('sentence')">Sentence case</button>
+</div>
+</div>
+<!-- Theme Toggle -->
+<button class="w-full text-left px-4 py-3 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex justify-between items-center transition-colors border-b border-slate-50 dark:border-slate-700/50" onclick="window.app.toggleTheme()">
+<span class="flex items-center gap-3"><i class="fas fa-moon w-4 text-center text-slate-400"></i>Theme</span>
+<span class="text-[9px] text-slate-400 uppercase font-black tracking-wider">Switch</span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<!-- Below Header: Nav Text Display -->
+<div class="px-6 py-4 flex items-center gap-4 animate-fade-in">
+<div class="flex items-center gap-4" id="page-header-display">
+            <div class="icon-3d-wrapper animate-pop-in">
+                <div class="icon-3d w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg flex items-center justify-center text-white">
+                    <i class="fas fa-home text-lg md:text-xl"></i>
+                </div>
+            </div><span class="text-xl md:text-2xl font-black uppercase tracking-widest text-slate-700 dark:text-slate-200 animate-fade-in">dashboard</span></div>
+</div>
+<!-- 3. Main Workspace -->
+<main class="flex-1 flex flex-col items-center justify-start overflow-hidden w-full p-4 md:p-6 pt-0">
+<div class="w-full max-w-7xl h-full relative">
+<!-- VIEW: DASHBOARD (Flat Cards Only, No Hero) -->
+<div class="h-full flex flex-col gap-8 animate-fade-in" id="view-dashboard">
+<!-- Cards Grid -->
+<div class="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-6 flex-shrink-0 mt-2">
+<div class="card-flat card-yellow rounded-2xl p-6 cursor-pointer flex flex-col items-center justify-center text-center shadow-md hover:shadow-xl group bg-white dark:bg-slate-800 h-40" onclick="window.app.setTab('opening-bell')">
+<i class="fas fa-bell text-3xl mb-4 text-yellow-500 dark:text-yellow-400 group-hover:scale-110 transition-transform"></i>
+<h3 class="font-black text-xs uppercase tracking-widest text-yellow-700 dark:text-yellow-300">Opening Bell</h3>
+</div>
+<div class="card-flat card-emerald rounded-2xl p-6 cursor-pointer flex flex-col items-center justify-center text-center shadow-md hover:shadow-xl group bg-white dark:bg-slate-800 h-40" onclick="window.app.setTab('fno')">
+<i class="fas fa-bullhorn text-3xl mb-4 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform"></i>
+<h3 class="font-black text-xs uppercase tracking-widest text-emerald-700 dark:text-emerald-300">F&amp;O Notifier</h3>
+</div>
+<div class="card-flat card-rose rounded-2xl p-6 cursor-pointer flex flex-col items-center justify-center text-center shadow-md hover:shadow-xl group bg-white dark:bg-slate-800 h-40" onclick="window.app.setTab('expiry')">
+<i class="fas fa-calendar-times text-3xl mb-4 text-rose-600 dark:text-rose-400 group-hover:scale-110 transition-transform"></i>
+<h3 class="font-black text-xs uppercase tracking-widest text-rose-700 dark:text-rose-300">Expiry</h3>
+</div>
+<div class="card-flat card-blue rounded-2xl p-6 cursor-pointer flex flex-col items-center justify-center text-center shadow-md hover:shadow-xl group bg-white dark:bg-slate-800 h-40" onclick="window.app.setTab('message')">
+<i class="fas fa-comment-alt text-3xl mb-4 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform"></i>
+<h3 class="font-black text-xs uppercase tracking-widest text-blue-700 dark:text-blue-300">Message</h3>
+</div>
+<div class="card-flat card-orange rounded-2xl p-6 cursor-pointer flex flex-col items-center justify-center text-center shadow-md hover:shadow-xl group bg-white dark:bg-slate-800 h-40" onclick="window.app.setTab('todo')">
+<i class="fas fa-list-check text-3xl mb-4 text-orange-600 dark:text-orange-400 group-hover:scale-110 transition-transform"></i>
+<h3 class="font-black text-xs uppercase tracking-widest text-orange-700 dark:text-orange-300">Task Manager</h3>
+</div>
+</div>
+</div>
+<!-- VIEW: OPENING BELL -->
+<div class="h-full animate-fade-in flex-col gap-6 overflow-hidden hidden" id="view-opening-bell" style="display: none;">
+<!-- Editor -->
+<div class="glass rounded-2xl flex flex-col h-[40%] overflow-hidden border border-slate-200 dark:border-slate-700 flex-shrink-0 shadow-lg">
+<div class="px-6 py-3 bg-white/50 dark:bg-slate-800/50 border-b-4 border-brand-500 flex justify-between items-center">
+<span class="text-xs font-black uppercase tracking-widest text-brand-600 dark:text-brand-400 flex items-center gap-2"><i class="fas fa-bell"></i> Opening Bell</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 hover:bg-indigo-200 transition-colors" onclick="window.app.openBellEditor()" title="Edit Format"><i class="fas fa-edit text-xs"></i></button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400 hover:bg-orange-200 transition-colors" onclick="window.app.copy('ob-output')" title="Copy"><i class="fas fa-copy text-xs"></i></button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 hover:bg-red-200 transition-colors" onclick="window.app.resetBell()"><i class="fas fa-trash-alt text-xs"></i></button>
+</div>
+</div>
+<div class="flex-1 flex gap-4 p-5 min-h-0">
+<div class="flex-1 flex flex-col gap-3">
+<textarea class="flex-1 input-visual p-4 text-xs resize-none focus:ring-4 focus:ring-brand-100 dark:focus:ring-brand-900 custom-scroll leading-relaxed font-mono" id="ob-input" placeholder="Paste Opening Bell text here..."></textarea>
+<button class="btn-flat py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-bold uppercase border-brand-800" onclick="window.app.genBell()">Generate</button>
+</div>
+<textarea class="flex-1 input-visual p-4 text-xs bg-slate-50 dark:bg-slate-900/50 custom-scroll resize-none leading-relaxed font-mono" id="ob-output" placeholder="Output..." readonly=""></textarea>
+</div>
+</div>
+<!-- Toolbar -->
+<div class="flex gap-3 justify-center py-2 flex-wrap flex-shrink-0">
+<button class="btn-flat px-4 py-2 rounded-xl bg-white dark:bg-slate-700 text-sm font-bold text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 shadow-sm" onclick="window.app.copySymbol('📢')">📢</button>
+<button class="btn-flat px-4 py-2 rounded-xl bg-white dark:bg-slate-700 text-sm font-bold text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 shadow-sm" onclick="window.app.copySymbol('🌎')">🌎</button>
+<button class="btn-flat px-4 py-2 rounded-xl bg-white dark:bg-slate-700 text-sm font-bold text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 shadow-sm" onclick="window.app.copySymbol('🚨')">🚨</button>
+<button class="btn-flat px-4 py-2 rounded-xl bg-white dark:bg-slate-700 text-sm font-bold text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 shadow-sm" onclick="window.app.copySymbol('📰')">📰</button>
+<button class="btn-flat px-4 py-2 rounded-xl bg-white dark:bg-slate-700 text-sm font-bold text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 shadow-sm" onclick="window.app.copySymbol('🔷')">🔷</button>
+<button class="btn-flat px-4 py-2 rounded-xl bg-white dark:bg-slate-700 text-sm font-bold text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 shadow-sm" onclick="window.app.copySymbol('⬆️')">⬆️</button>
+<button class="btn-flat px-4 py-2 rounded-xl bg-white dark:bg-slate-700 text-sm font-bold text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 shadow-sm" onclick="window.app.copySymbol('⬇️')">⬇️</button>
+</div>
+<!-- Mini Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1 content-start">
+<div class="card-flat card-brand rounded-xl p-4 relative group flex flex-col justify-between h-32 hover:border-brand-500 transition-colors bg-white dark:bg-slate-800">
+<button class="absolute top-2 right-2 text-slate-400 hover:text-brand-500 transition-colors" onclick="window.app.openSectionEditor('market')" title="Edit Template"><i class="fas fa-edit text-xs"></i></button>
+<div class="text-[9px] font-black uppercase tracking-widest opacity-50 text-center mb-1 text-slate-500"></div>
+<div class="flex-1 flex items-center justify-center">
+<div class="text-sm font-bold text-center px-2 leading-tight text-brand-700 dark:text-brand-200" id="preview-market">📢 market updates 📰</div>
+</div>
+<button class="w-full btn-flat py-2 bg-brand-600 text-white rounded-lg font-bold text-[10px] uppercase border-brand-600 flex items-center justify-center gap-2" onclick="window.app.copyHeader('market')"><i class="fas fa-copy"></i> Copy Header</button>
+</div>
+<div class="card-flat card-emerald rounded-xl p-4 relative group flex flex-col justify-between h-32 hover:border-emerald-500 transition-colors bg-white dark:bg-slate-800">
+<button class="absolute top-2 right-2 text-slate-400 hover:text-emerald-500 transition-colors" onclick="window.app.openSectionEditor('global')" title="Edit Template"><i class="fas fa-edit text-xs"></i></button>
+<div class="text-[9px] font-black uppercase tracking-widest opacity-50 text-center mb-1 text-slate-500"></div>
+<div class="flex-1 flex items-center justify-center">
+<div class="text-sm font-bold text-center px-2 leading-tight text-emerald-700 dark:text-emerald-200" id="preview-global">🌎 global cues 📰</div>
+</div>
+<button class="w-full btn-flat py-2 bg-emerald-600 text-white rounded-lg font-bold text-[10px] uppercase border-emerald-600 flex items-center justify-center gap-2" onclick="window.app.copyHeader('global')"><i class="fas fa-copy"></i> Copy Header</button>
+</div>
+<div class="card-flat card-rose rounded-xl p-4 relative group flex flex-col justify-between h-32 hover:border-rose-500 transition-colors bg-white dark:bg-slate-800">
+<button class="absolute top-2 right-2 text-slate-400 hover:text-rose-500 transition-colors" onclick="window.app.openSectionEditor('data')" title="Edit Template"><i class="fas fa-edit text-xs"></i></button>
+<div class="text-[9px] font-black uppercase tracking-widest opacity-50 text-center mb-1 text-slate-500"></div>
+<div class="flex-1 flex items-center justify-center">
+<div class="text-sm font-bold text-center px-2 leading-tight text-rose-700 dark:text-rose-200" id="preview-data">📢 data alert</div>
+</div>
+<button class="w-full btn-flat py-2 bg-rose-600 text-white rounded-lg font-bold text-[10px] uppercase border-rose-600 flex items-center justify-center gap-2" onclick="window.app.copyHeader('data')"><i class="fas fa-copy"></i> Copy Header</button>
+</div>
+</div>
+</div>
+<!-- VIEW: F&O NOTIFIER -->
+<div class="h-full animate-fade-in grid grid-cols-1 md:grid-cols-2 gap-6 hidden" id="view-fno">
+<div class="glass rounded-2xl p-1 flex flex-col h-full overflow-hidden shadow-xl border border-slate-200 dark:border-slate-700">
+<div class="px-5 py-4 border-b-4 border-brand-500 bg-slate-50 dark:bg-slate-800 flex justify-between items-center">
+<span class="font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2 text-xs uppercase tracking-widest"><i class="fas fa-sliders text-brand-500"></i> Configuration</span>
+<button class="text-[10px] font-bold text-slate-400 hover:text-red-500 uppercase transition-colors flex items-center gap-1" onclick="window.app.resetFno()"><i class="fas fa-undo"></i> Reset</button>
+</div>
+<div class="flex-1 p-6 flex flex-col justify-start overflow-visible">
+<div class="flex flex-col gap-6 w-full relative">
+<div>
+<label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">1. Contract Type</label>
+<div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
+<button class="flex-1 btn-flat py-2.5 rounded-lg text-xs font-bold bg-white dark:bg-slate-700 shadow-sm text-brand-600 dark:text-white border-slate-200 dark:border-slate-600" id="btn-future" onclick="window.app.setType('future')">FUTURE</button>
+<button class="flex-1 btn-flat py-2.5 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 border-transparent hover:border-slate-200 dark:hover:border-slate-600" id="btn-option" onclick="window.app.setType('option')">OPTION</button>
+</div>
+</div>
+<div class="relative z-50">
+<div class="flex justify-between items-center mb-2">
+<label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block">2. Select Symbols</label>
+<button class="text-[10px] text-brand-500 hover:text-brand-600 font-bold uppercase transition-colors flex items-center gap-1" onclick="window.app.openSymEditor()" title="Edit List"><i class="fas fa-pen"></i> Edit List</button>
+</div>
+<div class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 flex justify-between items-center cursor-pointer hover:border-brand-500 transition-colors group" id="symbol-trigger" onclick="window.app.toggleDrop()">
+<span class="text-[11px] font-bold text-brand-600 dark:text-brand-400" id="symbol-text">2 Selected</span>
+<i class="fas fa-chevron-down text-[10px] text-slate-400 group-hover:text-brand-500"></i>
+</div>
+<div class="flex flex-wrap gap-2 mt-3" id="selected-symbols-chips"><div class="flex items-center gap-1 bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 px-2 py-1 rounded text-[10px] font-bold border border-brand-200 dark:border-brand-800 animate-pop-in"><span>GOLDM</span><button onclick="window.app.toggleSym('GOLDM')" class="hover:text-red-500 transition-colors"><i class="fas fa-times"></i></button></div><div class="flex items-center gap-1 bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 px-2 py-1 rounded text-[10px] font-bold border border-brand-200 dark:border-brand-800 animate-pop-in"><span>GOLD</span><button onclick="window.app.toggleSym('GOLD')" class="hover:text-red-500 transition-colors"><i class="fas fa-times"></i></button></div></div>
+<div class="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl z-50 max-h-56 overflow-y-auto custom-scroll p-1 hidden" id="dropdown-menu"><div class="sticky top-0 bg-white dark:bg-slate-800 z-20 flex border-b border-slate-100 dark:border-slate-700"><button onclick="event.stopPropagation(); window.app.sel=[]; window.app.renderDrop(); window.app.updTxt();" class="flex-1 text-[10px] text-red-500 font-bold py-2 hover:bg-red-50 dark:hover:bg-red-900/20">CLEAR</button><div class="w-px bg-slate-100 dark:bg-slate-700"></div><button onclick="event.stopPropagation(); window.app.toggleDrop();" class="w-10 flex items-center justify-center text-slate-400 hover:text-slate-600"><i class="fas fa-times text-xs"></i></button></div><div class="px-3 py-1.5 bg-slate-50 dark:bg-slate-700/50 text-[10px] font-black text-slate-400 uppercase tracking-widest sticky top-8 z-10">BULLIONS</div><div onclick="event.stopPropagation(); window.app.toggleSym('GOLD')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 bg-brand-600 border-brand-600"><i class="fas fa-check text-white text-[8px]"></i></div><span class="text-xs font-bold text-brand-600 dark:text-brand-300">GOLD</span></div><div onclick="event.stopPropagation(); window.app.toggleSym('GOLDM')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 bg-brand-600 border-brand-600"><i class="fas fa-check text-white text-[8px]"></i></div><span class="text-xs font-bold text-brand-600 dark:text-brand-300">GOLDM</span></div><div onclick="event.stopPropagation(); window.app.toggleSym('GOLDGUINEA')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 border-slate-300 dark:border-slate-600"></div><span class="text-xs font-bold text-slate-600 dark:text-slate-300">GOLDGUINEA</span></div><div onclick="event.stopPropagation(); window.app.toggleSym('GOLDTEN')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 border-slate-300 dark:border-slate-600"></div><span class="text-xs font-bold text-slate-600 dark:text-slate-300">GOLDTEN</span></div><div onclick="event.stopPropagation(); window.app.toggleSym('GOLDPETAL')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 border-slate-300 dark:border-slate-600"></div><span class="text-xs font-bold text-slate-600 dark:text-slate-300">GOLDPETAL</span></div><div onclick="event.stopPropagation(); window.app.toggleSym('SILVER')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 border-slate-300 dark:border-slate-600"></div><span class="text-xs font-bold text-slate-600 dark:text-slate-300">SILVER</span></div><div onclick="event.stopPropagation(); window.app.toggleSym('SILVERM')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 border-slate-300 dark:border-slate-600"></div><span class="text-xs font-bold text-slate-600 dark:text-slate-300">SILVERM</span></div><div onclick="event.stopPropagation(); window.app.toggleSym('SILVERMIC')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 border-slate-300 dark:border-slate-600"></div><span class="text-xs font-bold text-slate-600 dark:text-slate-300">SILVERMIC</span></div><div class="px-3 py-1.5 bg-slate-50 dark:bg-slate-700/50 text-[10px] font-black text-slate-400 uppercase tracking-widest sticky top-8 z-10">ENERGY</div><div onclick="event.stopPropagation(); window.app.toggleSym('CRUDEOIL')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 border-slate-300 dark:border-slate-600"></div><span class="text-xs font-bold text-slate-600 dark:text-slate-300">CRUDEOIL</span></div><div onclick="event.stopPropagation(); window.app.toggleSym('CRUDEOILM')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 border-slate-300 dark:border-slate-600"></div><span class="text-xs font-bold text-slate-600 dark:text-slate-300">CRUDEOILM</span></div><div onclick="event.stopPropagation(); window.app.toggleSym('NATURALGAS')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 border-slate-300 dark:border-slate-600"></div><span class="text-xs font-bold text-slate-600 dark:text-slate-300">NATURALGAS</span></div><div onclick="event.stopPropagation(); window.app.toggleSym('NATGASMINI')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 border-slate-300 dark:border-slate-600"></div><span class="text-xs font-bold text-slate-600 dark:text-slate-300">NATGASMINI</span></div><div class="px-3 py-1.5 bg-slate-50 dark:bg-slate-700/50 text-[10px] font-black text-slate-400 uppercase tracking-widest sticky top-8 z-10">BASE METALS</div><div onclick="event.stopPropagation(); window.app.toggleSym('COPPER')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 border-slate-300 dark:border-slate-600"></div><span class="text-xs font-bold text-slate-600 dark:text-slate-300">COPPER</span></div><div onclick="event.stopPropagation(); window.app.toggleSym('ALUMINIINIUM')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 border-slate-300 dark:border-slate-600"></div><span class="text-xs font-bold text-slate-600 dark:text-slate-300">ALUMINIINIUM</span></div><div onclick="event.stopPropagation(); window.app.toggleSym('ALUMINI')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 border-slate-300 dark:border-slate-600"></div><span class="text-xs font-bold text-slate-600 dark:text-slate-300">ALUMINI</span></div><div onclick="event.stopPropagation(); window.app.toggleSym('LEAD')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 border-slate-300 dark:border-slate-600"></div><span class="text-xs font-bold text-slate-600 dark:text-slate-300">LEAD</span></div><div onclick="event.stopPropagation(); window.app.toggleSym('LEADMINI')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 border-slate-300 dark:border-slate-600"></div><span class="text-xs font-bold text-slate-600 dark:text-slate-300">LEADMINI</span></div><div onclick="event.stopPropagation(); window.app.toggleSym('ZINC')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 border-slate-300 dark:border-slate-600"></div><span class="text-xs font-bold text-slate-600 dark:text-slate-300">ZINC</span></div><div onclick="event.stopPropagation(); window.app.toggleSym('ZINCMINI')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 border-slate-300 dark:border-slate-600"></div><span class="text-xs font-bold text-slate-600 dark:text-slate-300">ZINCMINI</span></div></div>
+</div>
+<div class="grid grid-cols-2 gap-4 relative z-10">
+<div class="col-span-2"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">3. Message Date</label><input class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs font-mono focus:border-brand-500 outline-none" id="date-msg" type="date" value="2025-12-26"></div>
+<div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">4. Expiry Date</label><input class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs font-mono focus:border-brand-500 outline-none" id="date-expiry" type="date" value="2025-12-26"></div>
+<div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">5. Tender Start Date</label><input class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs font-mono focus:border-brand-500 outline-none" id="date-tender" type="date" value="2025-12-26"></div>
+</div>
+<button class="w-full btn-flat py-3.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold text-xs tracking-wide shadow-md border-brand-600" onclick="window.app.genFno()"><i class="fas fa-bolt"></i> Generate</button>
+</div>
+</div>
+</div>
+<div class="glass rounded-2xl p-1 flex flex-col h-full overflow-hidden shadow-xl border border-slate-200 dark:border-slate-700">
+<div class="px-5 py-4 border-b-4 border-orange-500 bg-slate-50 dark:bg-slate-800 flex justify-between items-center">
+<span class="font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2 text-xs uppercase tracking-widest"><i class="fas fa-eye text-orange-500"></i> Preview</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 hover:bg-indigo-200 transition-colors" onclick="window.app.openFnoEditor()" title="Edit Logic"><i class="fas fa-edit text-xs"></i></button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400 hover:bg-orange-200 transition-colors" onclick="window.app.copy('fno-output')" title="Copy Output"><i class="fas fa-copy text-xs"></i></button>
+</div>
+</div>
+<div class="flex-1 p-6 min-h-0">
+<textarea class="w-full h-full input-visual p-4 text-xs cursor-text bg-slate-50 dark:bg-slate-950/40 focus:border-orange-500 dark:focus:border-orange-500 custom-scroll leading-relaxed font-mono" id="fno-output" placeholder="Generated alert will appear here..." readonly="">GOLDM &amp; GOLD (futures) tender alert - 26-DEC-2025
+
+GOLDM &amp; GOLD (futures) (26-DEC-2025) contract tender period starts today. contract will be blocked @ 10:15 pm . if client have any open position to be closed before 10:30 pm today (26-DEC-2025) .otherwise rms team will be square off the positions.</textarea>
+</div>
+</div>
+</div>
+<!-- VIEW: EXPIRY TRACKER -->
+<div class="h-full animate-fade-in flex-col gap-4 hidden" id="view-expiry">
+<div class="glass rounded-2xl p-1 flex flex-col h-full overflow-hidden shadow-xl border border-slate-200 dark:border-slate-700">
+<div class="px-6 py-5 border-b-4 border-brand-500 bg-slate-50 dark:bg-slate-800">
+<div class="flex flex-col gap-4">
+<!-- BIG SELECTOR -->
+<div class="flex gap-2 mb-1">
+<div class="flex-1 p-1.5 bg-slate-100 dark:bg-slate-700 rounded-2xl flex text-lg font-black tracking-widest border border-slate-200 dark:border-slate-600 shadow-inner">
+<button class="flex-1 btn-flat py-5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-700 border-transparent transition-all" id="exp-type-future" onclick="window.app.setExpType('future')">FUTURE</button>
+<button class="flex-1 btn-flat py-5 rounded-xl bg-white dark:bg-slate-600 shadow-md text-brand-600 dark:text-brand-400 border-slate-200 dark:border-slate-500 transition-all" id="exp-type-option" onclick="window.app.setExpType('option')">OPTION</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Contract Symbol</label><input class="w-full input-visual p-3 text-xs uppercase" id="exp-sym" placeholder="E.g. GOLDM" value=""></div>
+<div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Expiry Date</label><input class="w-full input-visual p-3 text-xs font-mono" id="exp-date" type="date" value=""></div>
+<div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Tender Start Date</label><div class="flex gap-2"><input class="flex-1 input-visual p-3 text-xs font-mono" id="exp-tender" type="date" value=""><button class="btn-flat px-6 bg-brand-600 text-white rounded-xl text-xs font-bold shadow-sm border-brand-600" onclick="window.app.addExpiry()">ADD</button></div></div>
+</div>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto custom-scroll bg-slate-50/50 dark:bg-slate-900/30 p-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="expiry-wrapper">
+<div class="bg-white/50 dark:bg-slate-800/50 rounded-2xl p-4 border border-brand-100 dark:border-brand-900/30 shadow-sm"><h3 class="text-xs font-black text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-4 flex items-center gap-2"><i class="fas fa-chart-line"></i> Future Contracts</h3><div class="grid gap-3" id="expiry-list-future"><div class="text-[10px] text-slate-400 italic normal-case">No entries</div></div></div>
+<div class="bg-white/50 dark:bg-slate-800/50 rounded-2xl p-4 border border-indigo-100 dark:border-indigo-900/30 shadow-sm"><h3 class="text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-4 flex items-center gap-2"><i class="fas fa-layer-group"></i> Option Contracts</h3><div class="grid gap-3" id="expiry-list-option"><div class="text-[10px] text-slate-400 italic normal-case">No entries</div></div></div>
+</div>
+</div>
+</div>
+</div>
+<!-- VIEW: MESSAGE -->
+<div class="h-full animate-fade-in flex-col gap-4 hidden" id="view-message">
+<div class="glass rounded-2xl p-1 flex flex-col h-full overflow-hidden shadow-xl border border-slate-200 dark:border-slate-700">
+<div class="px-5 py-4 border-b-4 border-blue-500 bg-slate-50 dark:bg-slate-800 flex justify-between items-center">
+<span class="font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2 text-xs uppercase tracking-widest"><i class="fas fa-comment-alt text-blue-500"></i> MESSAGE FORMAT </span>
+<button class="btn-flat px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-[10px] font-bold shadow-sm border-blue-600" onclick="window.app.addMessage()">SAVE</button>
+</div>
+<div class="flex-1 p-6 flex flex-col gap-4 min-h-0">
+<div class="grid gap-4 mb-2">
+<input class="w-full input-visual p-3 text-xs font-bold" id="msg-desc" placeholder="Subject / Title" value="">
+<textarea class="w-full input-visual p-4 text-xs h-32 custom-scroll" id="msg-body" placeholder="Message content..."></textarea>
+</div>
+<div class="flex-1 overflow-y-auto custom-scroll bg-slate-50/50 dark:bg-slate-900/30 rounded-2xl p-3 space-y-3" id="message-list"><div class="h-20 flex items-center justify-center text-slate-400 text-xs italic normal-case">No messages saved</div></div>
+</div>
+</div>
+</div>
+<!-- VIEW: TO-DO LIST -->
+<div class="h-full animate-fade-in flex-col gap-4 hidden" id="view-todo">
+<div class="glass rounded-2xl p-1 flex flex-col h-full overflow-hidden shadow-xl border border-slate-200 dark:border-slate-700">
+<div class="px-5 py-4 border-b-4 border-orange-500 bg-slate-50 dark:bg-slate-800 flex justify-between items-center">
+<span class="font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2 text-xs uppercase tracking-widest"><i class="fas fa-list-check text-brand-500"></i> Task Manager</span>
+<div class="flex items-center gap-2">
+<div class="px-3 py-1 rounded-md bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 text-[10px] font-bold border border-orange-200 dark:border-orange-800" id="todo-pending">0 Pending</div>
+<div class="px-3 py-1 rounded-md bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold border border-emerald-200 dark:border-emerald-800" id="todo-complete">0 Done</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 transition-colors" onclick="window.app.resetTodos()" title="Reset All Tasks"><i class="fas fa-redo text-xs"></i></button>
+</div>
+</div>
+<div class="flex-1 p-6 flex flex-col gap-4 min-h-0">
+<div class="flex gap-2">
+<input class="flex-1 input-visual p-3 text-xs focus:ring-4 focus:ring-brand-100 dark:focus:ring-brand-900" id="todo-input" onkeypress="if(event.key === 'Enter') window.app.addTodo('todo-input')" placeholder="Add a new task..." type="text" value="">
+<button class="btn-flat w-12 h-full bg-brand-600 hover:bg-brand-700 text-white rounded-xl shadow-md border-brand-600 flex items-center justify-center" onclick="window.app.addTodo('todo-input')"><i class="fas fa-plus"></i></button>
+</div>
+<div class="flex-1 overflow-y-auto custom-scroll bg-slate-50/50 dark:bg-slate-900/30 rounded-2xl p-3" id="todo-list"><div class="h-full flex flex-col items-center justify-center text-slate-300 dark:text-slate-600"><i class="fas fa-clipboard-check text-4xl mb-2"></i><span class="text-xs">No tasks yet</span></div></div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- DATA & STORAGE MODAL -->
+<div class="fixed inset-0 z-[400] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4 animate-fade-in hidden" id="download-modal">
+<div class="glass rounded-2xl p-6 w-full max-w-sm shadow-2xl animate-pop-in bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-black text-sm uppercase tracking-widest text-slate-800 dark:text-white flex items-center gap-2">
+<i class="fas fa-save text-brand-600"></i> Save &amp; Backup
+            </h3>
+<button class="text-slate-400 hover:text-red-500 transition-colors" onclick="window.app.closeDownload()">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div class="flex flex-col gap-4">
+<!-- App Download -->
+<div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4 border border-indigo-100 dark:border-indigo-900/50 text-center">
+<div class="text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-3">
+                    Offline Application
+                </div>
+<button class="w-full btn-flat py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-md border-indigo-600 flex items-center justify-center gap-2 transition-all hover:scale-[1.02]" onclick="window.app.dlHtml()">
+<i class="fas fa-download"></i> Download Source File (.html)
+                </button>
+</div>
+<!-- Python Download Option -->
+<div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-xl p-4 border border-yellow-100 dark:border-yellow-900/50 text-center">
+<div class="text-[10px] font-black text-yellow-600 dark:text-yellow-400 uppercase tracking-widest mb-3">
+                    Python Integration
+                </div>
+<button class="w-full btn-flat py-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-xl text-xs font-bold shadow-md border-yellow-500 flex items-center justify-center gap-2 transition-all hover:scale-[1.02]" onclick="window.app.dlPython()">
+<i class="fab fa-python text-sm"></i> Download Python File
+                </button>
+</div>
+<!-- Data Backup -->
+<div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
+<div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 text-center">
+                    Data Backup
+                </div>
+<div class="grid grid-cols-2 gap-3">
+<button class="btn-flat py-2.5 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-[10px] font-bold border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center gap-1 shadow-sm" onclick="window.app.exportData()">
+<i class="fas fa-file-export text-emerald-500 text-sm"></i>
+<span>Export JSON</span>
+</button>
+<button class="btn-flat py-2.5 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-[10px] font-bold border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center gap-1 shadow-sm relative group">
+<i class="fas fa-file-import text-blue-500 text-sm"></i>
+<span>Import JSON</span>
+<input accept=".json" class="absolute inset-0 opacity-0 cursor-pointer" onchange="window.app.importData(this)" type="file" value="">
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- F&O EDITOR -->
+<div class="hidden fixed inset-0 z-[400] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in" id="fno-template-modal">
+<div class="glass rounded-3xl p-0 w-full max-w-2xl shadow-2xl animate-pop-in bg-white dark:bg-slate-900 overflow-hidden flex flex-col max-h-[90vh] border border-slate-200 dark:border-slate-700">
+<div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800">
+<h3 class="font-black text-sm uppercase tracking-widest text-slate-800 dark:text-white flex items-center gap-2"><i class="fas fa-edit text-brand-600"></i> Edit F&amp;O Logic</h3>
+<button class="text-slate-400 hover:text-red-500 transition-colors" onclick="window.app.closeModal('fno-template-modal')"><i class="fas fa-times"></i></button>
+</div>
+<div class="flex-1 overflow-y-auto p-6 flex flex-col gap-6 custom-scroll">
+<div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Future Template</label><textarea class="w-full h-32 input-visual p-4 text-xs leading-relaxed custom-scroll" id="edit-future"></textarea></div>
+<div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Option Template</label><textarea class="w-full h-32 input-visual p-4 text-xs leading-relaxed custom-scroll" id="edit-option"></textarea></div>
+</div>
+<div class="p-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex justify-end gap-3">
+<button class="px-6 py-2.5 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700" onclick="window.app.closeModal('fno-template-modal')">CANCEL</button>
+<button class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-bold shadow-lg" onclick="window.app.saveFnoTpl()">SAVE</button>
+</div>
+</div>
+</div>
+<!-- BELL EDITOR -->
+<div class="fixed inset-0 z-[400] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in hidden" id="bell-template-modal">
+<div class="glass rounded-3xl p-0 w-full max-w-2xl shadow-2xl animate-pop-in bg-white dark:bg-slate-900 overflow-hidden flex flex-col max-h-[90vh] border border-slate-200 dark:border-slate-700">
+<div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800">
+<h3 class="font-black text-sm uppercase tracking-widest text-slate-800 dark:text-white flex items-center gap-2"><i class="fas fa-edit text-brand-600"></i> Edit Bell Format</h3>
+<button class="text-slate-400 hover:text-red-500 transition-colors" onclick="window.app.closeModal('bell-template-modal')"><i class="fas fa-times"></i></button>
+</div>
+<div class="flex-1 overflow-y-auto p-6 flex flex-col gap-6 custom-scroll">
+<div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Header Text</label><textarea class="w-full h-20 input-visual p-4 text-xs leading-relaxed custom-scroll" id="edit-ob-header"></textarea></div>
+<div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Line Format</label><textarea class="w-full h-16 input-visual p-4 text-xs leading-relaxed custom-scroll" id="edit-ob-line"></textarea></div>
+<div class="border-t border-slate-200 dark:border-slate-700 pt-4"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Config (JSON)</label><textarea class="w-full h-32 input-visual p-4 text-xs font-mono leading-relaxed custom-scroll" id="edit-bell-json"></textarea></div>
+</div>
+<div class="p-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex justify-end gap-3">
+<button class="px-6 py-2.5 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700" onclick="window.app.closeModal('bell-template-modal')">CANCEL</button>
+<button class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-bold shadow-lg" onclick="window.app.saveBellTpl()">SAVE</button>
+</div>
+</div>
+</div>
+<!-- SECTION EDITOR -->
+<div class="fixed inset-0 z-[400] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in hidden" id="section-template-modal">
+<div class="glass rounded-3xl p-0 w-full max-w-xl shadow-2xl animate-pop-in bg-white dark:bg-slate-900 overflow-hidden flex flex-col border border-slate-200 dark:border-slate-700">
+<div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800">
+<h3 class="font-black text-sm uppercase tracking-widest text-slate-800 dark:text-white flex items-center gap-2"><i class="fas fa-edit text-brand-600"></i> Edit Section Template</h3>
+<button class="text-slate-400 hover:text-red-500 transition-colors" onclick="window.app.closeModal('section-template-modal')"><i class="fas fa-times"></i></button>
+</div>
+<div class="p-6">
+<label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Template Format</label>
+<textarea class="w-full h-32 input-visual p-4 text-xs leading-relaxed custom-scroll" id="edit-section-template"></textarea>
+<p class="text-[10px] text-slate-400 mt-2">Use {CONTENT} where the text should go.</p>
+<input id="edit-section-id" type="hidden" value="">
+</div>
+<div class="p-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex justify-end gap-3">
+<button class="px-6 py-2.5 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700" onclick="window.app.closeModal('section-template-modal')">CANCEL</button>
+<button class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-bold shadow-lg" onclick="window.app.saveSectionTpl()">SAVE</button>
+</div>
+</div>
+</div>
+<!-- SYMBOL EDITOR -->
+<div class="fixed inset-0 z-[400] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in hidden" id="symbol-modal">
+<div class="glass rounded-3xl p-0 w-full max-w-2xl shadow-2xl animate-pop-in bg-white dark:bg-slate-900 overflow-hidden flex flex-col max-h-[90vh] border border-slate-200 dark:border-slate-700">
+<div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800">
+<h3 class="font-black text-sm uppercase tracking-widest text-slate-800 dark:text-white flex items-center gap-2"><i class="fas fa-list text-brand-600"></i> Edit Symbol List</h3>
+<button class="text-slate-400 hover:text-red-500 transition-colors" onclick="window.app.closeModal('symbol-modal')"><i class="fas fa-times"></i></button>
+</div>
+<div class="flex-1 overflow-y-auto p-6 flex flex-col gap-6 custom-scroll">
+<div class="grid grid-cols-2 gap-4">
+<div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Contract Category</label><select class="w-full input-visual p-2 text-xs" id="sym-edit-type" onchange="window.app.updateSymGroups()"><option value="future">Future</option><option value="option">Option</option></select></div>
+<div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Select Group</label><select class="w-full input-visual p-2 text-xs" id="sym-edit-group" onchange="window.app.renderSymList()"><option value="0">BULLIONS</option><option value="1">ENERGY</option><option value="2">BASE METALS</option></select></div>
+</div>
+<div>
+<label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Add Symbol</label>
+<div class="flex gap-2">
+<input class="flex-1 input-visual p-2 text-xs uppercase" id="sym-edit-new" onkeypress="if(event.key==='Enter') window.app.addSym()" placeholder="" value="">
+<button class="px-4 py-2 bg-brand-600 text-white rounded-lg text-xs font-bold shadow-md hover:bg-brand-700 transition-colors" onclick="window.app.addSym()">ADD</button>
+</div>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 min-h-[200px] border border-slate-200 dark:border-slate-700">
+<label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Symbols in Group</label>
+<div class="flex flex-wrap gap-2" id="sym-edit-list"></div>
+</div>
+</div>
+<div class="p-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex justify-end gap-3">
+<button class="px-6 py-2.5 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700" onclick="window.app.closeModal('symbol-modal')">CANCEL</button>
+<button class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-bold shadow-lg" onclick="window.app.saveSym()">SAVE CHANGES</button>
+</div>
+</div>
+</div>
+<!-- NOTIFICATION MODAL -->
+<div class="hidden fixed inset-0 z-[500] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in" id="notification-modal">
+<div class="glass rounded-2xl p-6 w-full max-w-sm shadow-2xl animate-pop-in bg-white dark:bg-slate-900 border-l-4 border-red-500">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-black text-lg uppercase tracking-widest text-red-600 dark:text-red-400 flex items-center gap-2">
+<i class="fas fa-exclamation-triangle"></i> Daily Alerts
+      </h3>
+<button class="text-slate-400 hover:text-slate-600" onclick="document.getElementById('notification-modal').classList.add('hidden')"><i class="fas fa-times"></i></button>
+</div>
+<div class="flex flex-col gap-3 max-h-[60vh] overflow-y-auto custom-scroll" id="notification-content"></div>
+</div>
+</div>
+<!-- TOAST -->
+<div class="fixed bottom-6 right-6 transition-all duration-300 z-[600] bg-slate-800 dark:bg-white text-white dark:text-slate-900 px-6 py-4 rounded-xl shadow-2xl font-bold flex items-center gap-3 border border-slate-700 dark:border-slate-200 translate-y-32 opacity-0" id="toast">
+<i class="fas fa-check-circle text-brand-400 dark:text-brand-600 text-xl"></i>
+<span class="tracking-wide text-sm" id="toast-msg">Format: LOWER</span>
+</div>
+<script>
+// Mock localStorage to ensure safe execution in all environments
+const _localStore = {
+    _data: {},
+    getItem: function(k) { return localStorage.getItem(k); },
+    setItem: function(k, v) { localStorage.setItem(k, v); },
+    removeItem: function(k) { localStorage.removeItem(k); },
+    clear: function() { localStorage.clear(); }
+};
+
+window.app = {
+    fnoType: 'future', expiryType: 'future', sel: [], tasks: [], messages: [], expiryItems: [], data: {}, bellConfig: {}, editState: { type: 'future', groupIdx: 0 },
+    textCase: 'upper', 
+    dateFormat: 'DD-MMM-YYYY', 
+    activeInputId: null, 
+    
+    init: function() {
+        this.loadData();
+        setInterval(() => this.updateClock(), 1000); this.updateClock();
+        if(_localStore.getItem('theme') === 'dark' || (!_localStore.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); }
+        window.addEventListener('click', (e) => {
+            const tr=document.getElementById('symbol-trigger'), mn=document.getElementById('dropdown-menu'); 
+            if(tr && mn && !tr.contains(e.target) && !mn.contains(e.target)) mn.classList.add('hidden');
+            const setBtn = document.getElementById('settings-btn'), setMenu = document.getElementById('settings-menu');
+            if(setBtn && setMenu && !setBtn.contains(e.target) && !setMenu.contains(e.target)) setMenu.classList.add('hidden');
+        });
+        
+        ['ob-input'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.addEventListener('focus', () => this.activeInputId = id);
+        });
+        
+        this.updatePreviews();
+        this.setTab('dashboard');
+        
+        // Expiry Check
+        setTimeout(() => this.checkExpiryAlerts(), 500);
+    },
+
+    checkExpiryAlerts: function() {
+        const today = new Date().toISOString().split('T')[0];
+        const alerts = [];
+        
+        this.expiryItems.forEach(i => {
+            if(i.type === 'option' && i.d === today) {
+                alerts.push({ type: 'expiry', sym: i.s, date: i.d });
+            }
+            if(i.type === 'future' && i.t === today) {
+                alerts.push({ type: 'tender', sym: i.s, date: i.t });
+            }
+        });
+
+        if(alerts.length > 0) {
+            const c = document.getElementById('notification-content');
+            c.innerHTML = '';
+            alerts.forEach(a => {
+                const isExp = a.type === 'expiry';
+                const color = isExp ? 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20 border-rose-200 dark:border-rose-800' : 'text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800';
+                const icon = isExp ? 'fa-hourglass-end' : 'fa-hand-holding-usd';
+                const title = isExp ? 'OPTION EXPIRY' : 'TENDER START';
+                
+                const div = document.createElement('div');
+                div.className = `p-3 rounded-xl border ${color} flex items-center gap-3`;
+                div.innerHTML = `
+                    <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-white/50 dark:bg-black/20 shrink-0">
+                        <i class="fas ${icon} text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="text-[10px] font-black uppercase tracking-widest opacity-75">${title}</div>
+                        <div class="text-sm font-bold">${this.formatText(a.sym)}</div>
+                    </div>
+                `;
+                c.appendChild(div);
+            });
+            document.getElementById('notification-modal').classList.remove('hidden');
+        }
+    },
+
+    toggleSettings: function() { document.getElementById('settings-menu').classList.toggle('hidden'); },
+    toggleTheme: function() { document.documentElement.classList.toggle('dark'); _localStore.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light'); },
+
+    setCase: function(c) {
+        this.textCase = c;
+        if(document.getElementById('fno-output').value) this.genFno();
+        if(document.getElementById('ob-output').value) this.genBell(); 
+        this.updatePreviews();
+        this.renderExpiry();
+        this.renderMessages();
+        this.renderTodos();
+        this.toast(`Format: ${c.toUpperCase()}`);
+    },
+
+    updatePreviews: function() {
+        ['market', 'global', 'data'].forEach(sec => {
+            const tpl = document.getElementById(`tpl-${sec}`).value;
+            const clean = tpl.replace('{CONTENT}', '').trim();
+            const el = document.getElementById(`preview-${sec}`);
+            if(el) el.textContent = this.formatText(clean);
+        });
+    },
+
+    cycleDateFormat: function() {
+        const formats = ['DD-MMM-YYYY', 'MMM DD, YYYY', 'DDDD, DD MMM YYYY'];
+        const currentIdx = formats.indexOf(this.dateFormat);
+        this.dateFormat = formats[(currentIdx + 1) % formats.length];
+        document.getElementById('date-badge').textContent = this.dateFormat;
+        if(document.getElementById('fno-output').value) this.genFno();
+        this.renderExpiry();
+        this.updateClock(); 
+        this.toast(`Date: ${this.dateFormat}`);
+    },
+
+    formatText: function(str) {
+        if (!str) return '';
+        switch (this.textCase) {
+            case 'upper': return str.toUpperCase();
+            case 'lower': return str.toLowerCase();
+            case 'title': return str.toLowerCase().replace(/(?:^|\s|["'([{])+\S/g, match => match.toUpperCase());
+            case 'sentence': 
+                return str.split('\n').map(line => {
+                    line = line.trimEnd(); 
+                    if(!line.trim()) return line;
+                    const match = line.match(/[a-zA-Z0-9]/);
+                    if(!match) return line;
+                    const idx = match.index;
+                    return line.substring(0, idx) + line.charAt(idx).toUpperCase() + line.substring(idx+1).toLowerCase();
+                }).join('\n');
+            default: return str;
+        }
+    },
+
+    formatDate: function(dateStr) {
+        if(!dateStr) return '';
+        const [y, m, d] = dateStr.split('-');
+        const dateObj = new Date(y, m - 1, d);
+        const months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+        const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+        const dd = String(d).padStart(2, '0');
+        const dayName = days[dateObj.getDay()];
+        
+        switch(this.dateFormat) {
+            case 'DD-MMM-YYYY': return `${dd}-${months[parseInt(m)-1]}-${y}`;
+            case 'MMM DD, YYYY': 
+                const mmm = months[parseInt(m)-1];
+                return `${mmm.charAt(0) + mmm.slice(1).toLowerCase()} ${dd}, ${y}`;
+            case 'DDDD, DD MMM YYYY':
+                const mmm2 = months[parseInt(m)-1];
+                return `${dayName}, ${dd} ${mmm2.charAt(0) + mmm2.slice(1).toLowerCase()} ${y}`;
+            default: return `${dd}-${months[parseInt(m)-1]}-${y}`;
+        }
+    },
+
+    updateClock: function() { 
+        const now = new Date(); 
+        document.getElementById('live-time').textContent = now.toLocaleTimeString('en-US', {hour12:false}); 
+        const d = String(now.getDate()).padStart(2, '0'), m = String(now.getMonth() + 1).padStart(2, '0'), y = now.getFullYear();
+        const day = now.toLocaleDateString('en-US', {weekday: 'short'});
+        const datePart = this.formatDate(`${y}-${m}-${d}`);
+        document.getElementById('live-date').textContent = this.formatText(`${day}, ${datePart}`); 
+        
+        // Greeting Logic
+        const hr = now.getHours();
+        let greet = 'Good Morning';
+        if(hr >= 12) greet = 'Good Afternoon';
+        if(hr >= 17) greet = 'Good Evening';
+        const hTitle = document.getElementById('header-greeting');
+        if(hTitle) hTitle.textContent = this.formatText(greet);
+    },
+    
+    loadData: function() {
+        ['tpl-future','tpl-option','tpl-ob-header','tpl-ob-line','tpl-market','tpl-global','tpl-data','data-bell-config','data-symbols','data-todos','data-expiry','data-messages'].forEach(id=>{ if(_localStore.getItem(id)) { const el=document.getElementById(id); if(el) { if(id==='data-todos') el.textContent=JSON.stringify(this.tasks); else if(id==='data-expiry') el.textContent=JSON.stringify(this.expiryItems); else if(id==='data-messages') el.textContent=JSON.stringify(this.messages); else el.textContent=el.value; } } });
+        try { const bc=document.getElementById('data-bell-config').value; if(bc) this.bellConfig=JSON.parse(bc); } catch(e) {}
+        let raw=document.getElementById('data-symbols').value; if(_localStore.getItem('data-symbols')) { raw=_localStore.getItem('data-symbols'); document.getElementById('data-symbols').value=raw; document.getElementById('data-symbols').innerHTML=raw; } try { this.data=JSON.parse(raw); } catch(e) {}
+        if(_localStore.getItem('data-todos')) { try { this.tasks=JSON.parse(_localStore.getItem('data-todos')); } catch(e){} }
+        if(_localStore.getItem('data-expiry')) { try { this.expiryItems=JSON.parse(_localStore.getItem('data-expiry')); } catch(e){} }
+        if(_localStore.getItem('data-messages')) { try { this.messages=JSON.parse(_localStore.getItem('data-messages')); } catch(e){} }
+    },
+    
+    setTab: function(t) {
+        ['view-dashboard','view-opening-bell','view-fno','view-todo','view-expiry','view-message'].forEach(x => document.getElementById(x).classList.add('hidden'));
+        document.getElementById('view-'+t).classList.remove('hidden');
+        if (t === 'opening-bell') document.getElementById('view-opening-bell').style.display = 'flex';
+        else document.getElementById('view-opening-bell').style.display = 'none';
+        
+        ['nav-dashboard','nav-opening-bell','nav-fno','nav-todo','nav-expiry','nav-message'].forEach(n => {
+            const e=document.getElementById(n); if(!e) return;
+            if(n==='nav-'+t) e.classList.add('active'); 
+            else e.classList.remove('active');
+        });
+        
+        // Update Title Bar Context with 3D Icon and adjusted font
+        const titles = {
+            'dashboard': 'Dashboard', 'opening-bell': 'Opening Bell', 'fno': 'F&O Notifier', 
+            'expiry': 'Expiry Tracker', 'message': 'Message Builder', 'todo': 'Task Manager'
+        };
+        const icons = {
+             'dashboard': 'fas fa-home', 'opening-bell': 'fas fa-bell', 'fno': 'fas fa-bullhorn', 
+            'expiry': 'fas fa-calendar-times', 'message': 'fas fa-comment-alt', 'todo': 'fas fa-list-check'
+        };
+        const gradients = {
+            'dashboard': 'from-indigo-500 to-purple-600',
+            'opening-bell': 'from-yellow-400 to-orange-500',
+            'fno': 'from-emerald-500 to-teal-600',
+            'expiry': 'from-rose-500 to-pink-600',
+            'message': 'from-blue-500 to-cyan-600',
+            'todo': 'from-orange-500 to-amber-600'
+        };
+        
+        const d = document.getElementById('page-header-display');
+        let html = '';
+        if(t !== 'dashboard') {
+             html += `
+            <div class="icon-3d-wrapper animate-pop-in">
+                <div class="icon-3d w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br ${gradients[t]} shadow-lg flex items-center justify-center text-white">
+                    <i class="${icons[t]} text-lg md:text-xl"></i>
+                </div>
+            </div>`;
+        } else {
+             html += `
+            <div class="icon-3d-wrapper animate-pop-in">
+                <div class="icon-3d w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br ${gradients[t]} shadow-lg flex items-center justify-center text-white">
+                    <i class="${icons[t]} text-lg md:text-xl"></i>
+                </div>
+            </div>`;
+        }
+        
+        html += `<span class="text-xl md:text-2xl font-black uppercase tracking-widest text-slate-700 dark:text-slate-200 animate-fade-in">${this.formatText(titles[t])}</span>`;
+        d.innerHTML = html;
+
+        if(t==='fno') this.initFno(); if(t==='todo') this.renderTodos(); if(t==='expiry') this.renderExpiry(); if(t==='message') this.renderMessages();
+    },
+    
+    toast: function(m, err=false) { const t=document.getElementById('toast'), tm=document.getElementById('toast-msg'), i=t.querySelector('i'); tm.textContent=m; i.className=err?'fas fa-exclamation-circle text-red-500 text-xl':'fas fa-check-circle text-brand-400 dark:text-brand-600 text-xl'; t.classList.remove('translate-y-32','opacity-0'); setTimeout(()=>t.classList.add('translate-y-32','opacity-0'), 2500); },
+    
+    copy: function(id) { const el=document.getElementById(id); if(!el.value) return this.toast('Nothing to copy',true); el.select(); document.execCommand('copy'); this.toast('Copied'); },
+    copySymbol: function(str) { this.copyString(str); },
+    copyString: function(str) {
+        if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(str).then(() => this.toast('Copied'), () => this.copyFallback(str)); } 
+        else { this.copyFallback(str); }
+    },
+    copyFallback: function(str) {
+        const el = document.createElement('textarea'); el.value = str; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); this.toast('Copied');
+    },
+    
+    copyHeader: function(section) {
+        const tpl = document.getElementById(`tpl-${section}`).value;
+        const header = tpl.replace('{CONTENT}', '').trim();
+        this.copyString(this.formatText(header));
+    },
+    
+    closeModal: function(id) { document.getElementById(id).classList.add('hidden'); },
+    persist: function(id, val) { const el=document.getElementById(id); el.value=val; el.innerHTML=val; _localStore.setItem(id, val); },
+    
+    // Editors
+    openFnoEditor: function() { document.getElementById('edit-future').value=document.getElementById('tpl-future').value; document.getElementById('edit-option').value=document.getElementById('tpl-option').value; document.getElementById('fno-template-modal').classList.remove('hidden'); },
+    saveFnoTpl: function() { const f=document.getElementById('edit-future').value, o=document.getElementById('edit-option').value; this.persist('tpl-future',f); this.persist('tpl-option',o); this.closeModal('fno-template-modal'); this.toast('Saved'); },
+    openBellEditor: function() { document.getElementById('edit-ob-header').value=document.getElementById('tpl-ob-header').value; document.getElementById('edit-ob-line').value=document.getElementById('tpl-ob-line').value; document.getElementById('edit-bell-json').value=document.getElementById('data-bell-config').value||JSON.stringify(this.bellConfig,null,2); document.getElementById('bell-template-modal').classList.remove('hidden'); },
+    saveBellTpl: function() { const h=document.getElementById('edit-ob-header').value, l=document.getElementById('edit-ob-line').value, j=document.getElementById('edit-bell-json').value; try { this.bellConfig=JSON.parse(j); this.persist('data-bell-config',j); } catch(e) { return this.toast('Invalid JSON', true); } this.persist('tpl-ob-header',h); this.persist('tpl-ob-line',l); this.closeModal('bell-template-modal'); this.toast('Saved'); },
+    openSectionEditor: function(sec) { document.getElementById('edit-section-id').value = sec; document.getElementById('edit-section-template').value = document.getElementById(`tpl-${sec}`).value; document.getElementById('section-template-modal').classList.remove('hidden'); },
+    
+    saveSectionTpl: function() { 
+        const sec = document.getElementById('edit-section-id').value; 
+        const val = document.getElementById('edit-section-template').value; 
+        this.persist(`tpl-${sec}`, val); 
+        this.closeModal('section-template-modal'); 
+        this.updatePreviews();
+        this.toast('Saved'); 
+    },
+    
+    openSymEditor: function() { this.editState={type:'future',groupIdx:0}; const typeSel=document.getElementById('sym-edit-type'); typeSel.innerHTML='<option value="future">Future</option><option value="option">Option</option>'; typeSel.value='future'; this.updateSymGroups(); document.getElementById('symbol-modal').classList.remove('hidden'); },
+    updateSymGroups: function() { const type=document.getElementById('sym-edit-type').value; this.editState.type=type; const grpSel=document.getElementById('sym-edit-group'); grpSel.innerHTML=''; this.data[type].forEach((g,idx)=>{ const opt=document.createElement('option'); opt.value=idx; opt.text=g.group; grpSel.appendChild(opt); }); this.editState.groupIdx=0; grpSel.value=0; this.renderSymList(); },
+    renderSymList: function() { const grpSel=document.getElementById('sym-edit-group'); if(grpSel.value) this.editState.groupIdx=parseInt(grpSel.value); const list=document.getElementById('sym-edit-list'); list.innerHTML=''; const group=this.data[this.editState.type][this.editState.groupIdx]; if(!group) return; group.instruments.forEach((sym,idx)=>{ const chip=document.createElement('div'); chip.className='flex items-center gap-2 bg-white dark:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-600 shadow-sm text-xs font-bold text-slate-700 dark:text-slate-200'; chip.innerHTML=`<span>${sym}</span><button onclick="window.app.removeSym(${idx})" class="text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-times"></i></button>`; list.appendChild(chip); }); },
+    addSym: function() { const inp=document.getElementById('sym-edit-new'), val=inp.value.trim().toUpperCase(); if(!val) return; const group=this.data[this.editState.type][this.editState.groupIdx]; if(!group.instruments.includes(val)) { group.instruments.push(val); this.renderSymList(); inp.value=''; } else { this.toast('Duplicate',true); } },
+    removeSym: function(idx) { this.data[this.editState.type][this.editState.groupIdx].instruments.splice(idx,1); this.renderSymList(); },
+    saveSym: function() { const jsonStr=JSON.stringify(this.data,null,4); this.persist('data-symbols',jsonStr); this.closeModal('symbol-modal'); this.renderDrop(); this.toast('Saved'); },
+
+    // Data Export/Import
+    exportData: function() {
+        const data = {
+            tasks: this.tasks, messages: this.messages, expiryItems: this.expiryItems, symbols: this.data, bellConfig: this.bellConfig,
+            templates: {
+                future: document.getElementById('tpl-future').value, option: document.getElementById('tpl-option').value,
+                obHeader: document.getElementById('tpl-ob-header').value, obLine: document.getElementById('tpl-ob-line').value,
+                market: document.getElementById('tpl-market').value, global: document.getElementById('tpl-global').value, data: document.getElementById('tpl-data').value
+            }
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = `fury_data_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        this.toast('Data Exported');
+    },
+
+    importData: function(input) {
+        const file = input.files[0]; if(!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const json = JSON.parse(e.target.result);
+                if(json.tasks) { this.tasks = json.tasks; this.persist('data-todos', JSON.stringify(this.tasks)); }
+                if(json.messages) { this.messages = json.messages; this.persist('data-messages', JSON.stringify(this.messages)); }
+                if(json.expiryItems) { this.expiryItems = json.expiryItems; this.persist('data-expiry', JSON.stringify(this.expiryItems)); }
+                if(json.symbols) { this.data = json.symbols; this.persist('data-symbols', JSON.stringify(this.data)); }
+                if(json.bellConfig) { this.bellConfig = json.bellConfig; this.persist('data-bell-config', JSON.stringify(this.bellConfig)); }
+                if(json.templates) {
+                    if(json.templates.future) this.persist('tpl-future', json.templates.future);
+                    if(json.templates.option) this.persist('tpl-option', json.templates.option);
+                    if(json.templates.obHeader) this.persist('tpl-ob-header', json.templates.obHeader);
+                    if(json.templates.obLine) this.persist('tpl-ob-line', json.templates.obLine);
+                    if(json.templates.market) this.persist('tpl-market', json.templates.market);
+                    if(json.templates.global) this.persist('tpl-global', json.templates.global);
+                    if(json.templates.data) this.persist('tpl-data', json.templates.data);
+                }
+                this.renderTodos(); this.renderMessages(); this.renderExpiry(); this.updatePreviews(); this.closeDownload(); this.toast('Data Imported');
+            } catch(err) { this.toast('Invalid File', true); }
+        };
+        reader.readAsText(file);
+    },
+
+    openDownload: function() { document.getElementById('download-modal').classList.remove('hidden'); },
+    closeDownload: function() { document.getElementById('download-modal').classList.add('hidden'); },
+    
+    syncStateBeforeDownload: function() {
+        ['tpl-future','tpl-option','tpl-ob-header','tpl-ob-line','tpl-market','tpl-global','tpl-data','data-bell-config','data-symbols','data-todos','data-expiry','data-messages'].forEach(id=>{ 
+            const el=document.getElementById(id); 
+            if(el) { 
+                if(id==='data-todos') el.textContent=JSON.stringify(this.tasks); 
+                else if(id==='data-expiry') el.textContent=JSON.stringify(this.expiryItems); 
+                else if(id==='data-messages') el.textContent=JSON.stringify(this.messages); 
+                else el.textContent=el.value; 
+            } 
+        });
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(i => { if(i.type === 'checkbox' || i.type === 'radio') { if(i.checked) i.setAttribute('checked', 'checked'); else i.removeAttribute('checked'); } else { i.setAttribute('value', i.value); } });
+        const textareas = document.querySelectorAll('textarea'); textareas.forEach(t => { t.textContent = t.value; });
+    },
+
+    dlHtml: function() { 
+        this.closeDownload(); this.syncStateBeforeDownload();
+        const blob=new Blob([`<!DOCTYPE html>\n${document.documentElement.outerHTML}`], {type:'text/html'}); 
+        const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='fury_suite.html'; document.body.appendChild(a); a.click(); document.body.removeChild(a); this.toast('Downloading App...'); 
+    },
+    
+    dlPython: function() {
+        this.closeDownload();
+        const pyCode = `import webbrowser, os, sys, time
+def main():
+    print("------------------------------------------------")
+    print("   FURY PROFESSIONAL SUITE - DESKTOP LOADER     ")
+    print("------------------------------------------------")
+    print("1. Launch Web Application")
+    print("2. Exit")
+    print("------------------------------------------------")
+    
+    choice = input("Select Option [1-2]: ")
+    
+    if choice == '1':
+        html_file = 'fury_suite.html'
+        # Check if file exists in current directory
+        if os.path.exists(html_file):
+            print(f"Launching {html_file}...")
+            webbrowser.open('file://' + os.path.realpath(html_file))
+        else:
+            print("ERROR: fury_suite.html not found!")
+            print("Please ensure this script is in the same folder as the downloaded HTML app.")
+            input("Press Enter to exit...")
+    elif choice == '2':
+        sys.exit()
+    else:
+        print("Invalid Choice")
+        time.sleep(1)
+        main()
+
+if __name__ == "__main__":
+    main()
+`;
+        const blob=new Blob([pyCode], {type:'text/x-python'});
+        const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='fury_loader.py'; document.body.appendChild(a); a.click(); document.body.removeChild(a); this.toast('Downloading Script...'); 
+    },
+    
+    // Logic - Opening Bell
+    insertSymbol: function(sym) {
+        if(!this.activeInputId) this.activeInputId = 'ob-input';
+        const el = document.getElementById(this.activeInputId);
+        if(el) {
+            const start = el.selectionStart; const end = el.selectionEnd; const text = el.value;
+            el.value = text.substring(0, start) + sym + text.substring(end); el.selectionStart = el.selectionEnd = start + sym.length; el.focus();
+        }
+    },
+    clearBell: function(section) {
+        if(section !== 'market' && section !== 'global' && section !== 'data') { document.getElementById('ob-input').value = ''; document.getElementById('ob-output').value = ''; this.toast('Cleared'); }
+    },
+    resetBell: function() { this.clearBell('main'); }, 
+    genBell: function() { 
+        const v=document.getElementById('ob-input').value.trim(); if(!v) return this.toast('Input Required',true); 
+        const hdr=document.getElementById('tpl-ob-header').value, line=document.getElementById('tpl-ob-line').value, arrows=this.bellConfig.arrows||{up:'⬆️ ',down:'⬇️ '}, reps=this.bellConfig.replacements||{}; 
+        let res=hdr+"\n"; let lines = v.split('\n').filter(l => l.trim() !== '');
+        if(v.toLowerCase().startsWith('opening bell:')) { 
+            v.replace(/^Opening Bell:/i,'').replace(/ Points/gi,'').trim().split(',').forEach(p=>{ 
+                let s=p.trim(); let sLogic = s.toUpperCase();
+                for(const [k,v] of Object.entries(reps)) sLogic=sLogic.replace(new RegExp(k,'g'),v); 
+                const idx=sLogic.indexOf('('); 
+                if(idx!==-1) { 
+                    const m=sLogic.substring(idx).match(/[+-]?\d+(\.\d+)?/); 
+                    if(m) { const val=parseFloat(m[0]), emo=val>0?arrows.up:(val<0?arrows.down:''); if(emo) sLogic=`${sLogic.substring(0,idx).trimEnd()} ${emo}${sLogic.substring(idx)}`; } 
+                } 
+                res+=line.replace('{CONTENT}',sLogic)+'\n'; 
+            }); 
+        } else { 
+             lines.forEach(l => {
+                let s = l.trim().toUpperCase(); s = s.replace(/\(([+-]?\d+(\.\d+)?)\)/g, (m,n)=>(parseFloat(n)>0?arrows.up:arrows.down)+m); res += line.replace('{CONTENT}', s) + '\n';
+             });
+        }
+        document.getElementById('ob-output').value = this.formatText(res.trim()); this.toast('Generated'); 
+    },
+    
+    initFno: function() { if(document.getElementById('dropdown-menu').children.length>0) return; const t=new Date().toISOString().split('T')[0]; ['date-msg','date-expiry','date-tender'].forEach(i=>{ const e=document.getElementById(i); if(e) e.value=t; }); this.renderDrop(); },
+    setType: function(t) { 
+        this.fnoType=t; 
+        const bf=document.getElementById('btn-future'), bo=document.getElementById('btn-option'); 
+        const base = 'flex-1 btn-flat py-2.5 rounded-lg text-xs font-bold transition-all';
+        const active = 'bg-white dark:bg-slate-700 shadow-sm text-brand-600 dark:text-white border-slate-200 dark:border-slate-600';
+        const inactive = 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 border-transparent hover:border-slate-200 dark:hover:border-slate-600';
+        if(t==='future'){ bf.className = `${base} ${active}`; bo.className = `${base} ${inactive}`; } else { bo.className = `${base} ${active}`; bf.className = `${base} ${inactive}`; } 
+        if(this.data[t]) this.sel=this.sel.filter(s=>this.data[t].flatMap(g=>g.instruments).includes(s)); else this.sel=[]; this.renderDrop(); this.updTxt(); 
+    },
+    toggleDrop: function() { document.getElementById('dropdown-menu').classList.toggle('hidden'); },
+    toggleSym: function(s) { if(this.sel.includes(s)) this.sel=this.sel.filter(x=>x!==s); else this.sel.push(s); this.renderDrop(); this.updTxt(); },
+    updTxt: function() { 
+        const el=document.getElementById('symbol-text'); el.textContent=this.sel.length?`${this.sel.length} Selected`:'Select Symbols...'; el.className=this.sel.length?'text-[11px] font-bold text-brand-600 dark:text-brand-400':'text-[11px] font-bold text-slate-400';
+        const chipContainer = document.getElementById('selected-symbols-chips');
+        if(chipContainer) { chipContainer.innerHTML = ''; this.sel.forEach(s => { const chip = document.createElement('div'); chip.className = 'flex items-center gap-1 bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 px-2 py-1 rounded text-[10px] font-bold border border-brand-200 dark:border-brand-800 animate-pop-in'; chip.innerHTML = `<span>${s}</span><button onclick="window.app.toggleSym('${s}')" class="hover:text-red-500 transition-colors"><i class="fas fa-times"></i></button>`; chipContainer.appendChild(chip); }); }
+    },
+    renderDrop: function() { let h=`<div class="sticky top-0 bg-white dark:bg-slate-800 z-20 flex border-b border-slate-100 dark:border-slate-700"><button onclick="event.stopPropagation(); window.app.sel=[]; window.app.renderDrop(); window.app.updTxt();" class="flex-1 text-[10px] text-red-500 font-bold py-2 hover:bg-red-50 dark:hover:bg-red-900/20">CLEAR</button><div class="w-px bg-slate-100 dark:bg-slate-700"></div><button onclick="event.stopPropagation(); window.app.toggleDrop();" class="w-10 flex items-center justify-center text-slate-400 hover:text-slate-600"><i class="fas fa-times text-xs"></i></button></div>`; if(this.data[this.fnoType]) { this.data[this.fnoType].forEach(g=>{ h+=`<div class="px-3 py-1.5 bg-slate-50 dark:bg-slate-700/50 text-[10px] font-black text-slate-400 uppercase tracking-widest sticky top-8 z-10">${g.group}</div>`; g.instruments.forEach(i=>{ const c=this.sel.includes(i)?'bg-brand-600 border-brand-600':'border-slate-300 dark:border-slate-600'; const ic=this.sel.includes(i)?'<i class="fas fa-check text-white text-[8px]"></i>':''; const t=this.sel.includes(i)?'text-brand-600 dark:text-brand-300':'text-slate-600 dark:text-slate-300'; h+=`<div onclick="event.stopPropagation(); window.app.toggleSym('${i}')" class="px-3 py-2 flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-50 dark:border-slate-700/30"><div class="w-3.5 h-3.5 rounded border flex items-center justify-center mr-3 ${c}">${ic}</div><span class="text-xs font-bold ${t}">${i}</span></div>`; }); }); } document.getElementById('dropdown-menu').innerHTML=h; },
+    genFno: function() { 
+        const d1=document.getElementById('date-msg').value, d2=document.getElementById('date-expiry').value, d3=document.getElementById('date-tender').value; if(!d1||!d2||!d3) return this.toast('Dates Required',true); if(!this.sel.length) return this.toast('Symbols Required',true); 
+        const fmt=d=>{ return this.formatDate(d); }; 
+        let tpl=document.getElementById(this.fnoType==='future'?'tpl-future':'tpl-option').value; 
+        
+        let res = this.formatText(tpl);
+        
+        let symStr = this.sel.join(' & ').toUpperCase(); 
+        
+        res = res.replace(/{DATE}/gi,fmt(d1)).replace(/{SYMBOLS}/gi,symStr).replace(/{EXPIRY}/gi,fmt(d2)).replace(/{TENDER}/gi,fmt(d3));
+        
+        document.getElementById('fno-output').value = res; this.toast('Generated'); 
+    },
+    resetFno: function() { this.sel=[]; this.initFno(); this.setType('future'); document.getElementById('fno-output').value=''; this.updTxt(); this.toast('Reset'); },
+    addTodo: function(sourceId) { const i=document.getElementById(sourceId), v=i.value.trim(); if(!v) return; this.tasks.push({id:Date.now(), text:v, done:false}); _localStore.setItem('data-todos',JSON.stringify(this.tasks)); this.persist('data-todos',JSON.stringify(this.tasks)); i.value=''; this.renderTodos(); },
+    toggleTask: function(id) { const t=this.tasks.find(x=>x.id===id); if(t) t.done=!t.done; _localStore.setItem('data-todos',JSON.stringify(this.tasks)); this.persist('data-todos',JSON.stringify(this.tasks)); this.renderTodos(); },
+    delTask: function(id) { this.tasks=this.tasks.filter(x=>x.id!==id); _localStore.setItem('data-todos',JSON.stringify(this.tasks)); this.persist('data-todos',JSON.stringify(this.tasks)); this.renderTodos(); },
+    resetTodos: function() { this.tasks.forEach(t=>t.done=false); _localStore.setItem('data-todos',JSON.stringify(this.tasks)); this.persist('data-todos',JSON.stringify(this.tasks)); this.renderTodos(); this.toast('Tasks Reset'); },
+    renderTodos: function() { 
+        const lists = ['todo-list']; const total=this.tasks.length, done=this.tasks.filter(t=>t.done).length, pending=total-done; 
+        const pEl = document.getElementById('todo-pending'); if(pEl) pEl.textContent=`${pending} Pending`; const cEl = document.getElementById('todo-complete'); if(cEl) cEl.textContent=`${done} Done`;
+        lists.forEach(listId => {
+            const c=document.getElementById(listId); if(!c) return;
+            if(!total) { c.innerHTML='<div class="h-full flex flex-col items-center justify-center text-slate-300 dark:text-slate-600"><i class="fas fa-clipboard-check text-4xl mb-2"></i><span class="text-xs">No tasks yet</span></div>'; return; } 
+            let h=''; 
+            this.tasks.forEach(t=>{ h+=`<div class="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 rounded-xl mb-2 shadow-sm group ${t.done?'opacity-50':''} transition-all border border-slate-100 dark:border-slate-700/50"><input type="checkbox" class="w-5 h-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500 task-checkbox cursor-pointer" onchange="window.app.toggleTask(${t.id})" ${t.done?'checked':''}><div class="flex-1 text-sm text-slate-700 dark:text-slate-200 font-medium break-all ${t.done?'line-through text-slate-400':''}">${this.formatText(t.text)}</div><button onclick="window.app.delTask(${t.id})" class="text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"><i class="fas fa-trash-alt"></i></button></div>`; }); 
+            c.innerHTML=h; 
+        });
+    },
+
+    setExpType: function(t) { 
+        this.expiryType = t; 
+        const bF = document.getElementById('exp-type-future'), bO = document.getElementById('exp-type-option'); 
+        const base = 'flex-1 btn-flat py-5 rounded-xl text-lg font-black tracking-widest transition-all';
+        const active = 'bg-white dark:bg-slate-600 shadow-md text-brand-600 dark:text-brand-400 border-slate-200 dark:border-slate-500';
+        const inactive = 'text-slate-500 dark:text-slate-400 hover:text-slate-700 border-transparent';
+        if(t==='future') { bF.className = `${base} ${active}`; bO.className = `${base} ${inactive}`; } else { bO.className = `${base} ${active}`; bF.className = `${base} ${inactive}`; } 
+    },
+    addExpiry: function() { const s = document.getElementById('exp-sym').value.trim().toUpperCase(), d = document.getElementById('exp-date').value, t = document.getElementById('exp-tender').value; if(!s || !d || !t) return this.toast('All fields required', true); this.expiryItems.push({ id: Date.now(), type: this.expiryType, s, d, t }); this.saveExpiry(); document.getElementById('exp-sym').value = ''; this.renderExpiry(); this.toast('Added'); },
+    delExpiry: function(id) { this.expiryItems = this.expiryItems.filter(x => x.id !== id); this.saveExpiry(); this.renderExpiry(); },
+    filterExpiry: function(type) { this.renderExpiry(type); },
+    clearExpiry: function() { this.expiryItems = []; this.saveExpiry(); this.renderExpiry(); this.toast('Cleared'); },
+    saveExpiry: function() { const json = JSON.stringify(this.expiryItems); _localStore.setItem('data-expiry', json); this.persist('data-expiry', json); },
+    renderExpiry: function(filter = null) {
+        const futList = document.getElementById('expiry-list-future'), optList = document.getElementById('expiry-list-option'); futList.innerHTML = ''; optList.innerHTML = '';
+        if(this.expiryItems.length === 0) { futList.innerHTML = '<div class="text-[10px] text-slate-400 italic normal-case">No entries</div>'; optList.innerHTML = '<div class="text-[10px] text-slate-400 italic normal-case">No entries</div>'; return; }
+        this.expiryItems.forEach(i => {
+            const html = `<div class="bg-white dark:bg-slate-800 rounded-lg p-3 shadow-sm border-l-4 ${i.type==='future'?'border-brand-500':'border-indigo-500'} relative group"><button onclick="window.app.delExpiry(${i.id})" class="absolute top-1 right-1 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"><i class="fas fa-times text-xs"></i></button><div class="font-bold text-xs text-slate-700 dark:text-slate-200 mb-2">${this.formatText(i.s)}</div><div class="grid grid-cols-2 gap-2 text-[10px]"><div><span class="text-slate-400 block uppercase text-[8px]">Expiry</span><span class="font-mono font-bold text-slate-600 dark:text-slate-300">${this.formatDate(i.d)}</span></div><div><span class="text-slate-400 block uppercase text-[8px]">Tender</span><span class="font-mono font-bold text-slate-600 dark:text-slate-300">${this.formatDate(i.t)}</span></div></div></div>`;
+            if(i.type === 'future') futList.innerHTML += html; else optList.innerHTML += html;
+        });
+    },
+
+    addMessage: function() { const desc = document.getElementById('msg-desc').value.trim(), body = document.getElementById('msg-body').value.trim(); if(!desc || !body) return this.toast('Fields required', true); this.messages.push({ id: Date.now(), desc, body }); this.saveMessages(); document.getElementById('msg-desc').value = ''; document.getElementById('msg-body').value = ''; this.renderMessages(); this.toast('Saved'); },
+    delMessage: function(id) { this.messages = this.messages.filter(x => x.id !== id); this.saveMessages(); this.renderMessages(); },
+    saveMessages: function() { const json = JSON.stringify(this.messages); _localStore.setItem('data-messages', json); this.persist('data-messages', json); },
+    renderMessages: function() {
+        const c = document.getElementById('message-list');
+        if(this.messages.length === 0) { c.innerHTML = '<div class="h-20 flex items-center justify-center text-slate-400 text-xs italic normal-case">No messages saved</div>'; return; }
+        let h = '';
+        this.messages.forEach(m => {
+            const safeBody = encodeURIComponent(m.body);
+            h += `<div class="bg-white dark:bg-slate-800 rounded-lg p-3 shadow-sm border border-slate-200 dark:border-slate-700 relative group"><button onclick="window.app.delMessage(${m.id})" class="absolute top-2 right-2 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"><i class="fas fa-trash-alt text-xs"></i></button><div class="font-bold text-xs text-blue-600 dark:text-blue-400 mb-1">${this.formatText(m.desc)}</div><div class="text-[10px] text-slate-600 dark:text-slate-300 whitespace-pre-wrap font-mono bg-slate-50 dark:bg-slate-900/50 p-2 rounded">${this.formatText(m.body)}</div><button onclick="window.app.copyMessage(${m.id})" class="mt-2 w-6 h-6 flex items-center justify-center rounded bg-slate-100 dark:bg-slate-700 text-slate-500 hover:text-brand-500 transition-colors" title="Copy Content"><i class="fas fa-copy text-xs"></i></button></div>`;
+        });
+        c.innerHTML = h;
+    },
+    
+    copyMessage: function(id) { const msg = this.messages.find(m => m.id === id); if(msg) { const content = this.formatText(msg.body); this.copyString(content); } }
+};
+document.addEventListener('DOMContentLoaded', () => window.app.init());
+</script>
+<!--
+"/image?query="
+-->
+</body></html>

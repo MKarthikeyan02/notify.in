@@ -508,15 +508,6 @@ GOLDM &amp; GOLD (futures) (26-DEC-2025) contract tender period starts today. co
 <i class="fas fa-download"></i> Download Source File (.html)
                 </button>
 </div>
-<!-- Python Download Option -->
-<div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-xl p-4 border border-yellow-100 dark:border-yellow-900/50 text-center">
-<div class="text-[10px] font-black text-yellow-600 dark:text-yellow-400 uppercase tracking-widest mb-3">
-                    Python Integration
-                </div>
-<button class="w-full btn-flat py-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-xl text-xs font-bold shadow-md border-yellow-500 flex items-center justify-center gap-2 transition-all hover:scale-[1.02]" onclick="window.app.dlPython()">
-<i class="fab fa-python text-sm"></i> Download Python File
-                </button>
-</div>
 <!-- Data Backup -->
 <div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
 <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 text-center">
@@ -979,43 +970,6 @@ window.app = {
         this.closeDownload(); this.syncStateBeforeDownload();
         const blob=new Blob([`<!DOCTYPE html>\n${document.documentElement.outerHTML}`], {type:'text/html'}); 
         const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='fury_suite.html'; document.body.appendChild(a); a.click(); document.body.removeChild(a); this.toast('Downloading App...'); 
-    },
-    
-    dlPython: function() {
-        this.closeDownload();
-        const pyCode = `import webbrowser, os, sys, time
-def main():
-    print("------------------------------------------------")
-    print("   FURY PROFESSIONAL SUITE - DESKTOP LOADER     ")
-    print("------------------------------------------------")
-    print("1. Launch Web Application")
-    print("2. Exit")
-    print("------------------------------------------------")
-    
-    choice = input("Select Option [1-2]: ")
-    
-    if choice == '1':
-        html_file = 'fury_suite.html'
-        # Check if file exists in current directory
-        if os.path.exists(html_file):
-            print(f"Launching {html_file}...")
-            webbrowser.open('file://' + os.path.realpath(html_file))
-        else:
-            print("ERROR: fury_suite.html not found!")
-            print("Please ensure this script is in the same folder as the downloaded HTML app.")
-            input("Press Enter to exit...")
-    elif choice == '2':
-        sys.exit()
-    else:
-        print("Invalid Choice")
-        time.sleep(1)
-        main()
-
-if __name__ == "__main__":
-    main()
-`;
-        const blob=new Blob([pyCode], {type:'text/x-python'});
-        const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='fury_loader.py'; document.body.appendChild(a); a.click(); document.body.removeChild(a); this.toast('Downloading Script...'); 
     },
     
     // Logic - Opening Bell
